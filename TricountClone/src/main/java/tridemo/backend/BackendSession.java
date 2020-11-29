@@ -13,7 +13,72 @@ import com.datastax.driver.core.Session;
 
 public class BackendSession {
 
-	private static final Logger logger = LoggerFactory.getLogger(BackendSession.class);
+    private static final Logger logger = LoggerFactory.getLogger(BackendSession.class);
+
+    private Session session;
+
+    public BackendSession(String contactPoint, String keyspace) throws BackendException {
+        Cluster cluster = Cluster.builder().addContactPoint(contactPoint).build();
+        try {
+            session = cluster.connect(keyspace);
+        } catch (Exception e) {
+            throw new BackendException("Could not connect to the cluster. " + e.getMessage() + ".", e);
+        }
+        prepareStatements();
+    }
+
+    private static PreparedStatement SELECT_ALL_FROM_USERS;
+
+    private static final String USER_FORMAT = "CompanyName: %-10s Nick: %-10s Money: %-2f\n";
+
+
+    private void prepareStatements() throws BackendException {
+		try {
+		    SELECT_ALL_FROM_USERS = session.prepare("SELECT * FROM users;");
+        } catch (Exception e){
+		    throw new BackendException("Could not prepare statements. "+e.getMessage() +".",e);
+        }
+		logger.info("Statements prepared");
+    }
+
+    protected void finalize(){
+        try{
+            if(session != null) {
+                session.getCluster().close();
+            }
+        } catch (Exception e) {
+            logger.error("Could not close existing cluster",e);
+        }
+    }
+
+    public String selectAllUsers() throws BackendException {
+        StringBuilder builder = new StringBuilder();
+        BoundStatement bs = new BoundStatement(SELECT_ALL_FROM_USERS);
+
+        ResultSet rs = null;
+
+        try{
+            rs = session.execute(bs);
+        } catch (Exception e){
+            throw new BackendException("Could not perform a query. " + e.getMessage() +".",e);
+        }
+
+        for(Row row:rs){
+            String companyName = row.getString("companyname");
+            String name = row.getString("name");
+            Double money  = row.getDouble("money");
+
+            builder.append(String.format(USER_FORMAT,companyName,name,money));
+        }
+
+        return builder.toString();
+    }
+
+}
+
+
+/*
+private static final Logger logger = LoggerFactory.getLogger(BackendSession.class);
 
 	private Session session;
 
@@ -143,4 +208,5 @@ public class BackendSession {
 	}
 
 
-}
+
+ */

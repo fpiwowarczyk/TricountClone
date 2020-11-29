@@ -14,6 +14,37 @@ public class Main {
 
 	private static final String PROPERTIES_FILENAME = "config.properties";
 
+	public static void main(String[] args) throws BackendException, InterruptedException {
+		String contactPoint = null;
+		String keyspace = null;
+		Properties properties = new Properties();
+		try {
+			properties.load(Main.class.getClassLoader().getResourceAsStream(PROPERTIES_FILENAME));
+
+			contactPoint = properties.getProperty("contact_point");
+			keyspace = properties.getProperty("keyspace");
+		} catch (IOException ex){
+			ex.printStackTrace();
+		}
+
+		// Funkcjonalność apki
+		BackendSession session = new BackendSession(contactPoint, keyspace);
+
+
+		String output = session.selectAllUsers();
+		System.out.println("Users{ \n"+output+"}");
+
+	}
+
+
+
+
+
+}
+
+/*
+	private static final String PROPERTIES_FILENAME = "config.properties";
+
 	public static void main(String[] args) throws IOException, BackendException, InterruptedException {
 		String contactPoint = null;
 		String keyspace = null;
@@ -71,4 +102,6 @@ public class Main {
 
 	}
 
-}
+
+
+ */
