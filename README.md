@@ -15,3 +15,28 @@ payment, next app calculate results and sends them to the database.
 Database will additionally store all payments if any use would want to 
 change mistake. 
 
+## Schema 
+Work in progress
+``` CQL 
+CREATE TALBE Users (
+    billingId uuid,
+    userId
+    
+);
+
+CEATE TABLE Billings (
+    billingId uuid,
+    name varchar,
+    createdAt timestamp,
+    
+);
+
+CREATE TABLE Payments (
+    billingId uuid,
+    userId
+    
+    
+
+);
+```
+
