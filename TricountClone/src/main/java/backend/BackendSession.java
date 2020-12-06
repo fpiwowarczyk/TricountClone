@@ -1,14 +1,8 @@
-package cassdemo.backend;
+package backend;
 
+import com.datastax.driver.core.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.datastax.driver.core.BoundStatement;
-import com.datastax.driver.core.Cluster;
-import com.datastax.driver.core.PreparedStatement;
-import com.datastax.driver.core.ResultSet;
-import com.datastax.driver.core.Row;
-import com.datastax.driver.core.Session;
 
 
 public class BackendSession {
@@ -29,7 +23,7 @@ public class BackendSession {
 
     private static PreparedStatement SELECT_ALL_FROM_USERS;
 
-    private static final String USER_FORMAT = "CompanyName: %-10s Nick: %-10s Money: %-2f\n";
+    private static final String USER_FORMAT = "UserId : %-20s Name: %-10s Pass: %-20s roomId: %-10s\n";
 
 
     private void prepareStatements() throws BackendException {
@@ -64,11 +58,12 @@ public class BackendSession {
         }
 
         for(Row row:rs){
-            String companyName = row.getString("companyname");
+            String userId = row.getUUID("userId").toString();
             String name = row.getString("name");
-            Double money  = row.getDouble("money");
+            String password  = row.getString("password");
+            String roomId  = row.getUUID("roomId").toString();
 
-            builder.append(String.format(USER_FORMAT,companyName,name,money));
+            builder.append(String.format(USER_FORMAT,userId,name,password,roomId));
         }
 
         return builder.toString();

@@ -1,14 +1,9 @@
-package cassdemo;
+import backend.BackendException;
+import backend.BackendSession;
 
 import java.io.IOException;
-import java.net.InetAddress;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Properties;
-import java.util.Random;
 
-import cassdemo.backend.BackendException;
-import cassdemo.backend.BackendSession;
 
 public class Main {
 
@@ -28,10 +23,10 @@ public class Main {
 		}
 
 		// Funkcjonalność apki
-		BackendSession session = new BackendSession(contactPoint, keyspace);
+		BackendSession backendSession = new BackendSession(contactPoint, keyspace);
 
 
-		String output = session.selectAllUsers();
+		String output = backendSession.selectAllUsers();
 		System.out.println("Users{ \n"+output+"}");
 
 	}
