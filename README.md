@@ -10,36 +10,37 @@ Usually you have pay only one person instead of few in the end.
 
 ## Schema
 ``` CQL 
-CREATE TABLE Pokoj (
+CREATE TABLE Room (
     roomId UUID,
     name varchar,
     PRIMARY KEY (roomId)
-    ); // Dane pokoju rozliczeniowego 
+); // Dane pokoju rozliczeniowego 
     
-TABLE roomResult (
+CREATE TABLE roomResult (
     room UUID,
-    user uuid,
-    money double
+    user UUID,
+    money double,
     PRIMARY KEY (room)
-    ); // Przetrzymywanie aktualnego wyniki rozliczenia danego pokoju dla
+); // Przetrzymywanie aktualnego wyniki rozliczenia danego pokoju dla
        //kazdego uzytkownika osobno
     
-TABLE Users (
+CREATE TABLE Users (
     userId UUID,
     name varchar,
-    roomId uuid,
-    PRIMARY KEY (name, userId)
-    ); // Aktualne dane o uzytkowniku 
+    password varchar,
+    roomId UUID,
+    PRIMARY KEY (name,password, userId)
+); // Aktualne dane o uzytkowniku 
     
-TABLE Paymants (
+CREATE TABLE Payments (
     paymenyId UUID,
     room UUID,
-    amount dobule,
-    whoPaid uuid,
-    whoGet uuid
-    ??? Date ??????
-    PRIMARY KEY (room, uuid)
-    ); // Zapis historii dla wszystkich tranzakcji 
+    amount double,
+    payer uuid,
+    receiver uuid,
+    // date ????
+    PRIMARY KEY (room, payer)
+); // Zapis historii dla wszystkich tranzakcji 
 ```
 
 ## How it works
@@ -52,12 +53,34 @@ TABLE Paymants (
 
 ### Add transaction
 
-1. User add his transaction 
-2. Inert payment into payments
-3. Update/Add new roomResult
+1. User add his transaction
+3. App locally split payment into receivers 
+4. Insert individually all payments 
+5. Update/Add new roomResult
 
+Example :
+
+Filip pay 10 $ for Kasia and Kuba.
+
+App Split it into 5$ for each Kasia and Kuba.
+
+So we have two payments. 
+
+Result:
+* Filip: 10 $
+* Kasia: -5$
+* Kuba: -5$
+
+Mby add date to history payments and add all payments on one date to show
+in history real transactions. In these example to have only one transaction in history
+not two of them. 
 ### Request for room transactions history 
 
 1. User select that option
 2. Query for all payments for room
+2.5. Reduce all historical transactions with the same date. 
 3. Print all transactions for that room. 
+
+## Conclusions 
+
+Will add after finish. 
