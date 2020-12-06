@@ -11,6 +11,8 @@ public class BackendSession {
 
     private Session session;
 
+    Users users;
+
     public BackendSession(String contactPoint, String keyspace) throws BackendException {
         Cluster cluster = Cluster.builder().addContactPoint(contactPoint).build();
         try {
@@ -18,24 +20,22 @@ public class BackendSession {
         } catch (Exception e) {
             throw new BackendException("Could not connect to the cluster. " + e.getMessage() + ".", e);
         }
-        prepareStatements();
+        initializeData();
     }
 
-    private static PreparedStatement SELECT_ALL_FROM_USERS;
-
-    private static final String USER_FORMAT = "UserId : %-20s Name: %-10s Pass: %-20s roomId: %-10s\n";
-
-
-    private void prepareStatements() throws BackendException {
-		try {
-		    SELECT_ALL_FROM_USERS = session.prepare("SELECT * FROM users;");
-        } catch (Exception e){
-		    throw new BackendException("Could not prepare statements. "+e.getMessage() +".",e);
-        }
-		logger.info("Statements prepared");
+    private void initializeData() throws BackendException {
+        this.users = new Users(session);
     }
 
-    protected void finalize(){
+
+
+    public String printUsers() throws BackendException {
+       return users.selectAllUsers();
+    }
+
+
+
+    public void endSession(){
         try{
             if(session != null) {
                 session.getCluster().close();
@@ -43,30 +43,6 @@ public class BackendSession {
         } catch (Exception e) {
             logger.error("Could not close existing cluster",e);
         }
-    }
-
-    public String selectAllUsers() throws BackendException {
-        StringBuilder builder = new StringBuilder();
-        BoundStatement bs = new BoundStatement(SELECT_ALL_FROM_USERS);
-
-        ResultSet rs = null;
-
-        try{
-            rs = session.execute(bs);
-        } catch (Exception e){
-            throw new BackendException("Could not perform a query. " + e.getMessage() +".",e);
-        }
-
-        for(Row row:rs){
-            String userId = row.getUUID("userId").toString();
-            String name = row.getString("name");
-            String password  = row.getString("password");
-            String roomId  = row.getUUID("roomId").toString();
-
-            builder.append(String.format(USER_FORMAT,userId,name,password,roomId));
-        }
-
-        return builder.toString();
     }
 
 }

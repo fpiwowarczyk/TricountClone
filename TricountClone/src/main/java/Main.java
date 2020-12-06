@@ -22,12 +22,13 @@ public class Main {
 			ex.printStackTrace();
 		}
 
-		// Funkcjonalność apki
 		BackendSession backendSession = new BackendSession(contactPoint, keyspace);
 
 
-		String output = backendSession.selectAllUsers();
+		String output = backendSession.printUsers();
 		System.out.println("Users{ \n"+output+"}");
+
+		backendSession.endSession();
 
 	}
 
