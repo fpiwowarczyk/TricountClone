@@ -11,3 +11,30 @@ INSERT INTO Nicks (nick) VALUES ('maciej');
 INSERT INTO Nicks (nick) VALUES ('filip');
 ```
 ```
+TABLE Pokoj (
+    roomId UUID,
+    name varchar,
+    PRIMARY KEY (roomId)
+    )
+TABLE Rozliczenie (
+    rooom UUID,
+    user uuid,
+    money double
+)
+    
+TABLE Users (
+    userId UUID,
+    name varchar,
+    roomId uuid[],
+    PRIMARY KEY (name, userId)
+)
+TABLE Paymants (
+    paymenyId UUID,
+    room UUID,
+    amount dobule,
+    whoPaid uuid,
+    whoGet uuid
+    PRIMARY KEY (room, uuid)
+)
+
+```

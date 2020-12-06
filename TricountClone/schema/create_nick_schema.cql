@@ -1,11 +1,11 @@
-CREATE KEYSPACE IF NOT EXISTS Test
+CREATE KEYSPACE IF NOT EXISTS Tricount
   WITH REPLICATION = { 'class' : 'SimpleStrategy', 'replication_factor' : 3 };
 
-USE Test;
+USE Tricount;
 
-CREATE TABLE Nicks (
-  nick varchar,
-  status varchar,
+CREATE TABLE Users (
+  name varchar,
+  userId uuid,
   PRIMARY KEY (nick)
 );
 
