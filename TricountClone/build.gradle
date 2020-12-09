@@ -41,7 +41,7 @@ dependencies {
 }
 
 configurations.all {
-//    exclude module: 'logback-classic'
+    exclude module: 'logback-classic'
 }
 
 project.buildDir = 'bin'
@@ -49,9 +49,8 @@ project.buildDir = 'bin'
 mainClassName = "Main"
 
 run {
-    //systemProperty 'logback.configurationFile', 'logback.xml'
+    systemProperty 'logback.configurationFile', 'logback.xml'
     standardInput = System.in
-    
     if(project.hasProperty('myargs')){
         //String[] myargsArray = myargs.split(',')
         String[] myargsArray = myargs.split(' ')
