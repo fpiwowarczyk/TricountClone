@@ -25,7 +25,7 @@ CREATE TABLE Users (
 );
 
 CREATE TABLE Payments (
-  paymenyId UUID,
+  paymentId UUID,
   room UUID,
   amount double,
   payer uuid,

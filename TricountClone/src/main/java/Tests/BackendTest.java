@@ -32,6 +32,5 @@ public class BackendTest {
         backendSession.userControler.deleteUser(test.getName(),test.getPassword(),test.getUserId());
 
         System.out.println(backendSession.userControler.getUsers());
-
     }
 }
