@@ -20,3 +20,35 @@ INSERT INTO Users
 //    'mojehaslo',
 //    5fa78f14-37bd-11eb-adc1-0242ac120002);
 
+INSERT INTO payments (paymentId,
+                        room,
+                        amount,
+                        payer,
+                        receiver) VALUES
+                        (ab036100-3b36-11eb-adc1-0242ac120002,
+                        ab036100-3b36-11eb-adc1-0242ac120003,
+                        30.0,
+                        ab036100-3b36-11eb-adc1-0242ac120004,
+                        ab036100-3b36-11eb-adc1-0242ac120005);
+
+INSERT INTO payments (paymentId,
+                        room,
+                        amount,
+                        payer,
+                        receiver) VALUES
+                        (ab036100-3b36-11eb-adc1-0242ac120010,
+                        ab036100-3b36-11eb-adc1-0242ac120011,
+                        10.0,
+                        ab036100-3b36-11eb-adc1-0242ac120012,
+                        ab036100-3b36-11eb-adc1-0242ac120013);
+
+INSERT INTO roomresult (room,user,money) VALUES
+                        (ab036a88-3b36-11eb-adc1-0242ac120002,
+                        ab036a88-3b36-11eb-adc1-0242ac120020,
+                        -10.0);
+
+INSERT INTO roomresult (room,user,money) VALUES
+                        (ab036a88-3b36-11eb-adc1-0242ac120002,
+                        ab036a88-3b36-11eb-adc1-0242ac120034,
+                        10.0);
+

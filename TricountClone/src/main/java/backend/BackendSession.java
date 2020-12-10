@@ -1,5 +1,8 @@
 package backend;
 
+import backend.Payment.PaymentControler;
+import backend.Room.RoomControler;
+import backend.RoomResult.RoomResultControler;
 import backend.User.UserControler;
 import backend.User.UserService;
 import com.datastax.driver.core.*;
@@ -11,8 +14,12 @@ public class BackendSession {
 
     private static final Logger logger = LoggerFactory.getLogger(BackendSession.class);
 
-    private Session session;
+    private final Session session;
 
+
+    public PaymentControler paymentControler;
+    public RoomControler roomControler;
+    public RoomResultControler roomResultControler;
     public UserControler userControler;
 
     public BackendSession(String contactPoint, String keyspace) throws BackendException {
@@ -26,17 +33,20 @@ public class BackendSession {
     }
 
     private void initializeData() throws BackendException {
+        this.paymentControler = new PaymentControler(session);
+        this.roomControler = new RoomControler(session);
+        this.roomResultControler = new RoomResultControler(session);
         this.userControler = new UserControler(session);
     }
 
 
-    public void endSession(){
-        try{
-            if(session != null) {
+    public void endSession() {
+        try {
+            if (session != null) {
                 session.getCluster().close();
             }
         } catch (Exception e) {
-            logger.error("Could not close existing cluster",e);
+            logger.error("Could not close existing cluster", e);
         }
     }
 

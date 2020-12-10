@@ -27,7 +27,7 @@ public class Main {
 
 		BackendSession backendSession = new BackendSession(contactPoint, keyspace);
 
-		runAllBackendTests(backendSession);
+		runAllBackendTests(backendSession,true);
 
 		UserInterface UI = new UserInterface(backendSession);
 

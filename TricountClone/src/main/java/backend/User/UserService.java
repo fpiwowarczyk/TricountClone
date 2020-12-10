@@ -37,7 +37,7 @@ public class UserService {
             } catch (Exception e) {
                 throw new BackendException("Could not prepare statements. " + e.getMessage() + ".", e);
             }
-            logger.info("Statements prepared");
+            logger.info("Statements prepared for UserService");
         }
 
 
