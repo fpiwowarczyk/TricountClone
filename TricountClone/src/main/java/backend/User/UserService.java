@@ -31,9 +31,9 @@ public class UserService {
     private void prepareStatements() throws BackendException {
             try {
                 SELECT_ALL_FROM_USERS = session.prepare("SELECT * FROM users;");
-                SELECT_USER_BY_NAME_AND_PASS = session.prepare("SELECT * FROM users WHERE name=? AND password =?");
-                INSERT_USER = session.prepare("INSERT INTO users (name,password,userId,roomId) VALUES (?,?,?,?)");
-                DELETE_USER = session.prepare("DELETE FROM users WHERE name=? AND password=? AND userID =?");
+                SELECT_USER_BY_NAME_AND_PASS = session.prepare("SELECT * FROM users WHERE name=? AND password =?;");
+                INSERT_USER = session.prepare("INSERT INTO users (name,password,userId,roomId) VALUES (?,?,?,?);");
+                DELETE_USER = session.prepare("DELETE FROM users WHERE name=? AND password=? AND userID =?;");
             } catch (Exception e) {
                 throw new BackendException("Could not prepare statements. " + e.getMessage() + ".", e);
             }

@@ -17,9 +17,6 @@ public class UserInterface {
         }
 
         System.out.println("You are logged as USER "); // <---- Add login functionality and put here name
-
-
-
     }
 
 
