@@ -15,5 +15,17 @@ public class RoomControler {
         return this.roomService.selectAllRooms();
     }
 
+    public RoomDTO getRoom(String name) throws BackendException {
+        return this.roomService.selectRoomByName(name);
+    }
+
+    public void addRoom(String name) throws BackendException {
+        roomService.insertRoom(name);
+    }
+
+    public void deleteRoom(String name,String roomId) throws BackendException {
+        roomService.deleteRoomById(name,roomId);
+    }
+
 
 }

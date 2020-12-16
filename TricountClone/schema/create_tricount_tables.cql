@@ -6,7 +6,7 @@ USE Tricount;
 CREATE TABLE Room (
   roomId UUID,
   name varchar,
-  PRIMARY KEY (roomId)
+  PRIMARY KEY (name,roomId)
 );
 
 CREATE TABLE roomResult (
@@ -31,5 +31,5 @@ CREATE TABLE Payments (
   payer uuid,
   receiver uuid,
   // date ????
-  PRIMARY KEY (room, payer)
+  PRIMARY KEY (room, payer,paymentId)
 );
