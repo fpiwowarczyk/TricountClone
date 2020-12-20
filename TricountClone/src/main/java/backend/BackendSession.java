@@ -33,7 +33,7 @@ public class BackendSession {
     }
 
     private void initializeData() throws BackendException {
-        //this.paymentControler = new PaymentControler(session);
+        this.paymentControler = new PaymentControler(session);
         this.roomControler = new RoomControler(session);
        // this.roomResultControler = new RoomResultControler(session);
         this.userControler = new UserControler(session);
