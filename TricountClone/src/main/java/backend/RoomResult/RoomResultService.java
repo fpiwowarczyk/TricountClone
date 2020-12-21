@@ -1,16 +1,11 @@
 package backend.RoomResult;
 
 import backend.BackendException;
-import backend.User.UserService;
 import com.datastax.driver.core.PreparedStatement;
 import com.datastax.driver.core.Session;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.util.LinkedList;
 
 public class RoomResultService {
-    private static final Logger logger = LoggerFactory.getLogger(RoomResultService.class);
 
     private final Session session;
 
@@ -30,7 +25,6 @@ public class RoomResultService {
         }catch (Exception e){
             throw new BackendException("Could not prepare statements. " + e.getMessage()+".",e);
         }
-        logger.info("Statements prepared for RoomResultService");
     }
 
 }

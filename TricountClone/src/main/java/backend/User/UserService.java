@@ -2,20 +2,17 @@ package backend.User;
 
 import backend.BackendException;
 import com.datastax.driver.core.*;
-import org.apache.cassandra.cql3.statements.Bound;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.LinkedList;
 import java.util.UUID;
 
 public class UserService {
-    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
     private final Session session;
 
     private static PreparedStatement SELECT_ALL_FROM_USERS;
     private static PreparedStatement SELECT_USER_BY_NAME_AND_PASS;
+    private static PreparedStatement SELECT_USER_BY_ID;
     private static PreparedStatement INSERT_USER;
     private static PreparedStatement DELETE_USER;
 
@@ -29,94 +26,117 @@ public class UserService {
     }
 
     private void prepareStatements() throws BackendException {
-            try {
-                SELECT_ALL_FROM_USERS = session.prepare("SELECT * FROM users;");
-                SELECT_USER_BY_NAME_AND_PASS = session.prepare("SELECT * FROM users WHERE name=? AND password =?;");
-                INSERT_USER = session.prepare("INSERT INTO users (name,password,userId,roomId) VALUES (?,?,?,?);");
-                DELETE_USER = session.prepare("DELETE FROM users WHERE name=? AND password=? AND userID =?;");
-            } catch (Exception e) {
-                throw new BackendException("Could not prepare statements. " + e.getMessage() + ".", e);
-            }
-            logger.info("Statements prepared for UserService");
+        try {
+            SELECT_ALL_FROM_USERS = session.prepare("SELECT * FROM users;");
+            SELECT_USER_BY_NAME_AND_PASS = session.prepare("SELECT * FROM users WHERE name=? AND password =?;");
+            SELECT_USER_BY_ID = session.prepare("SELECT * FROM users WHERE name = ? AND password = ? AND userId = ?");
+            INSERT_USER = session.prepare("INSERT INTO users (name,password,userId,roomId) VALUES (?,?,?,?);");
+            DELETE_USER = session.prepare("DELETE FROM users WHERE name=? AND password=? AND userID =?;");
+        } catch (Exception e) {
+            throw new BackendException("Could not prepare statements. " + e.getMessage() + ".", e);
         }
+    }
 
 
-    public String selectAllUsers() throws BackendException {
-        StringBuilder builder = new StringBuilder();
+    public LinkedList<UserDTO> selectAllUsers() throws BackendException {
+        LinkedList<UserDTO> users = new LinkedList<>();
         BoundStatement bs = new BoundStatement(SELECT_ALL_FROM_USERS);
 
         ResultSet rs = null;
 
-        try{
+        try {
             rs = session.execute(bs);
-        } catch (Exception e){
-            throw new BackendException("Could not perform a query. " + e.getMessage() +".",e);
+        } catch (Exception e) {
+            throw new BackendException("Could not perform a query. " + e.getMessage() + ".", e);
         }
 
-        for(Row row:rs){
+        for (Row row : rs) {
             String userId = row.getUUID("userId").toString();
             String name = row.getString("name");
-            String password  = row.getString("password");
-            String roomId  = row.getUUID("roomId").toString();
+            String password = row.getString("password");
+            String roomId = row.getUUID("roomId").toString();
 
-            builder.append(String.format(USER_FORMAT,userId,name,password,roomId));
+            users.add(new UserDTO(name, password, userId, roomId));
         }
-
-        return builder.toString();
+        return users;
     }
 
-    public LinkedList<UserDTO> selectUserByNameAndPassword(String name, String password) throws BackendException{
+    public UserDTO selectUserById(String nameInput, String passwordInput, String userIdInput) throws BackendException {
+        ResultSet rs = null;
+        BoundStatement bs = new BoundStatement(SELECT_USER_BY_ID);
+
+
+        try {
+            bs.bind(nameInput, passwordInput, UUID.fromString(userIdInput));
+            rs = session.execute(bs);
+        } catch (Exception e) {
+            throw new BackendException("Could not perform a query. " + e.getMessage() + ".", e);
+        }
+        String userId = rs.one().getUUID("userID").toString();
+        String name = rs.one().getString("name");
+        String password = rs.one().getString("password");
+        String roomId = rs.one().getUUID("roomId").toString();
+        return new UserDTO(name, password, userId, roomId);
+    }
+
+    public LinkedList<UserDTO> selectUserByNameAndPassword(String name, String password) throws BackendException {
         ResultSet rs = null;
         BoundStatement bs = new BoundStatement(SELECT_USER_BY_NAME_AND_PASS);
 
-        LinkedList<UserDTO> result = new LinkedList<UserDTO>();
+        LinkedList<UserDTO> user = new LinkedList<>();
 
-        try{
-            bs.bind(name,password);
+        try {
+            bs.bind(name, password);
             rs = session.execute(bs);
-        } catch (Exception e){
-            throw new BackendException("Could not perform a query. " + e.getMessage() +".",e);
+        } catch (Exception e) {
+            throw new BackendException("Could not perform a query. " + e.getMessage() + ".", e);
         }
-
-        for(Row row:rs){
+        for (Row row : rs) {
             String userId = row.getUUID("userId").toString();
-            String roomId  = row.getUUID("roomId").toString();
+            String roomId = row.getUUID("roomId").toString();
 
-            if(userId != null && roomId != null){
-                result.add(new UserDTO(name,password,userId,roomId));
+            if (userId != null && roomId != null) {
+                user.add(new UserDTO(name, password, userId, roomId));
             }
-
         }
-
-        return result;
+        return user;
     }
 
     public void deleteUser(String name, String password, String userId) throws BackendException {
         BoundStatement bs = new BoundStatement(DELETE_USER);
 
-        try{
-            bs.bind(name,password,UUID.fromString(userId));
+        try {
+            bs.bind(name, password, UUID.fromString(userId));
             session.execute(bs);
-        } catch  (Exception e){
-            throw new BackendException("Could not perform a query. " + e.getMessage() +".",e);
+        } catch (Exception e) {
+            throw new BackendException("Could not perform a query. " + e.getMessage() + ".", e);
         }
     }
 
-    public void insertUser(String name, String password) throws BackendException {
-        BoundStatement bs = new BoundStatement(INSERT_USER);
+    public void insertUser(String name, String password, String roomId) throws BackendException {
+        BoundStatement insertUser = new BoundStatement(INSERT_USER);
+        BoundStatement selectUser = new BoundStatement(SELECT_USER_BY_NAME_AND_PASS);
+        ResultSet rs = null;
+        UserDTO user = new UserDTO(name, password, roomId);
 
-        UUID userID = UUID.randomUUID();
-        UUID roomID = UUID.randomUUID(); // #TODO  Change it
-
-        try{
-            bs.bind(name,password,userID,roomID);
-            session.execute(bs);
-        } catch  (Exception e){
-            throw new BackendException("Could not perform a query. " + e.getMessage() +".",e);
+        try {
+            selectUser.bind(user.getName(), user.getPassword());
+            rs = session.execute(selectUser);
+        } catch (Exception e) {
+            throw new BackendException("Could not perform a query. " + e.getMessage() + ".", e);
         }
-
+        try {
+            if (rs.iterator().hasNext()) {
+                String userUUID = rs.one().getUUID("userId").toString();
+                insertUser.bind(user.getName(), user.getPassword(), UUID.fromString(userUUID), UUID.fromString(user.getRoomId()));
+            } else {
+                insertUser.bind(user.getName(), user.getPassword(), UUID.randomUUID(), UUID.fromString(user.getRoomId()));
+            }
+            session.execute(insertUser);
+        } catch (Exception e) {
+            throw new BackendException("Could not perform a query. " + e.getMessage() + ".", e);
+        }
     }
-
 
 }
 

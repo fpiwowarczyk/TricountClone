@@ -12,7 +12,7 @@ public class UserControler{
     public UserControler(Session session) throws BackendException {
         userService = new UserService(session);
     }
-    public String getUsers() throws BackendException {
+    public LinkedList<UserDTO> getUsers() throws BackendException {
         return userService.selectAllUsers();
     }
 
@@ -20,8 +20,8 @@ public class UserControler{
         return userService.selectUserByNameAndPassword(name,password);
     }
 
-    public void insertUser(String name, String password) throws BackendException {
-        userService.insertUser(name,password);
+    public void insertUser(String name, String password,String roomId) throws BackendException {
+        userService.insertUser(name,password,roomId);
     }
 
     public void deleteUser(String name, String password, String userId) throws BackendException {

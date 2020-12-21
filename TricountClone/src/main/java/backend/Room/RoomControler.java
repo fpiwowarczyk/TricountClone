@@ -3,6 +3,8 @@ package backend.Room;
 import backend.BackendException;
 import com.datastax.driver.core.Session;
 
+import java.util.LinkedList;
+
 public class RoomControler {
 
     RoomService roomService;
@@ -11,7 +13,7 @@ public class RoomControler {
         this.roomService = new RoomService(session);
     }
 
-    public String getRooms() throws BackendException {
+    public LinkedList<RoomDTO> getRooms() throws BackendException {
         return this.roomService.selectAllRooms();
     }
 
@@ -19,8 +21,8 @@ public class RoomControler {
         return this.roomService.selectRoomByName(name);
     }
 
-    public void addRoom(String name) throws BackendException {
-        roomService.insertRoom(name);
+    public void addRoom(String name,String roomId) throws BackendException {
+        roomService.insertRoom(name,roomId);
     }
 
     public void deleteRoom(String name,String roomId) throws BackendException {

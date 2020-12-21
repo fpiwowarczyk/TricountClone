@@ -5,13 +5,10 @@ import backend.User.UserService;
 import com.datastax.driver.core.*;
 import jnr.ffi.Struct;
 import org.apache.cassandra.cql3.statements.Bound;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.UUID;
 
 public class PaymentService {
-    private static final Logger logger = LoggerFactory.getLogger(PaymentService.class);
 
     private final Session session;
 
@@ -54,7 +51,6 @@ public class PaymentService {
         } catch (Exception e){
             throw new BackendException("Could not prepare statements. "+e.getMessage()+".",e);
         }
-        logger.info("Statements prepared for PaymentService");
     }
 
     public String selectAllPayments() throws BackendException {

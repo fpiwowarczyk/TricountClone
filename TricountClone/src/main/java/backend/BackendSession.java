@@ -4,15 +4,11 @@ import backend.Payment.PaymentControler;
 import backend.Room.RoomControler;
 import backend.RoomResult.RoomResultControler;
 import backend.User.UserControler;
-import backend.User.UserService;
 import com.datastax.driver.core.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 public class BackendSession {
 
-    private static final Logger logger = LoggerFactory.getLogger(BackendSession.class);
 
     private final Session session;
 
@@ -40,13 +36,13 @@ public class BackendSession {
     }
 
 
-    public void endSession() {
+    public void endSession() throws BackendException {
         try {
             if (session != null) {
                 session.getCluster().close();
             }
         } catch (Exception e) {
-            logger.error("Could not close existing cluster", e);
+            throw new BackendException("Could not connect to the cluster. " + e.getMessage() + ".", e);
         }
     }
 
