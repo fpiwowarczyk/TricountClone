@@ -6,6 +6,7 @@ import com.datastax.driver.core.*;
 import jnr.ffi.Struct;
 import org.apache.cassandra.cql3.statements.Bound;
 
+import java.util.LinkedList;
 import java.util.UUID;
 
 public class PaymentService {
@@ -53,9 +54,9 @@ public class PaymentService {
         }
     }
 
-    public String selectAllPayments() throws BackendException {
-        StringBuilder builder = new StringBuilder();
+    public LinkedList<PaymentDTO> selectAllPayments() throws BackendException {
         BoundStatement bs = new BoundStatement(SELECT_ALL_FROM_PAYMENTS);
+        LinkedList<PaymentDTO> payments = new LinkedList<>();
 
         ResultSet rs = null;
 
@@ -71,14 +72,14 @@ public class PaymentService {
             double amount = row.getDouble("amount");
             String payer = row.getUUID("payer").toString();
             String receiver = row.getUUID("receiver").toString();
-            builder.append(String.format(PAYMENT_FORMAT,paymentId,roomId,amount,payer,receiver));
+            payments.add(new PaymentDTO(paymentId,roomId,amount,payer,receiver));
         }
-        return builder.toString();
+        return payments;
     }
 
-    public String selectPaymentsByRoom(String room) throws BackendException {
-        StringBuilder builder = new StringBuilder();
+    public LinkedList<PaymentDTO> selectPaymentsByRoom(String room) throws BackendException {
         BoundStatement bs = new BoundStatement(SELECT_PAYMENTS_BY_ROOM);
+        LinkedList<PaymentDTO> payments = new LinkedList<>();
 
         ResultSet rs = null;
 
@@ -95,15 +96,14 @@ public class PaymentService {
             double amount = row.getDouble("amount");
             String payer = row.getUUID("payer").toString();
             String receiver = row.getUUID("receiver").toString();
-            builder.append(String.format(PAYMENT_FORMAT,paymentId,roomId,amount,payer,receiver));
+            payments.add(new PaymentDTO(paymentId,roomId,amount,payer,receiver));
         }
-
-        return builder.toString();
+        return payments;
     }
 
-    public String selectPaymentsByRoomAndUser(String room, String user) throws BackendException{
-        StringBuilder builder = new StringBuilder();
+    public LinkedList<PaymentDTO> selectPaymentsByRoomAndUser(String room, String user) throws BackendException{
         BoundStatement bs = new BoundStatement(SELECT_PAYMENTS_BY_ROOM_AND_USER);
+        LinkedList<PaymentDTO> payments = new LinkedList<>();
 
         ResultSet rs = null;
         try {
@@ -119,14 +119,14 @@ public class PaymentService {
             double amount = row.getDouble("amount");
             String payer = row.getUUID("payer").toString();
             String receiver = row.getUUID("receiver").toString();
-            builder.append(String.format(PAYMENT_FORMAT,paymentId,roomId,amount,payer,receiver));
+            payments.add(new PaymentDTO(paymentId,roomId,amount,payer,receiver));
         }
-        return builder.toString();
+        return payments;
     }
 
-    public String selectPaymentByRoomAndUserAndPaymentId(String room, String user, String payment) throws BackendException {
-        StringBuilder builder = new StringBuilder();
+    public PaymentDTO selectPaymentByRoomAndUserAndPaymentId(String room, String user, String payment) throws BackendException {
         BoundStatement bs = new BoundStatement(SELECT_PAYMENTS_BY_ROOM_AND_USER_AND_ID);
+        PaymentDTO output = null;
 
         ResultSet rs = null;
         try {
@@ -142,33 +142,49 @@ public class PaymentService {
             double amount = row.getDouble("amount");
             String payer = row.getUUID("payer").toString();
             String receiver = row.getUUID("receiver").toString();
-            builder.append(String.format(PAYMENT_FORMAT,paymentId,roomId,amount,payer,receiver));
+            output = new PaymentDTO(paymentId,roomId,amount,payer,receiver);
         }
-        return builder.toString();
+        return output;
     }
 
-    public void insertPayment(String room, double amount, String payer, String receiver) throws BackendException {
+    public void insertPayment(String paymentId, String room, double amount, String payer, String receiver) throws BackendException {
         BoundStatement bs = new BoundStatement(INSERT_PAYMENT);
 
-        UUID paymentId = UUID.randomUUID();
         try {
-            bs.bind(paymentId,UUID.fromString(room),amount,UUID.fromString(payer),UUID.fromString(receiver));
+            bs.bind(UUID.fromString(paymentId),UUID.fromString(room),amount,UUID.fromString(payer),UUID.fromString(receiver));
             session.execute(bs);
         }catch(Exception e) {
             throw new BackendException("Could not perform a query. " + e.getMessage() + ".",e);
         }
     }
 
-    public void deletePaymentsByRoom(String room){
+    public void deletePaymentsByRoom(String room) throws BackendException {
         BoundStatement bs = new BoundStatement(DELETE_PAYMENT_BY_ROOM);
+        try {
+            bs.bind(UUID.fromString(room));
+            session.execute(bs);
+        } catch (Exception e) {
+            throw new BackendException("Could not perform a query. " + e.getMessage()+".",e);
+        }
     }
 
-    public void deletePaymentsByUser(String room, String user){
+    public void deletePaymentsByUser(String room, String user) throws BackendException {
         BoundStatement bs = new BoundStatement(DELETE_PAYMENT_BY_USER);
+        try {
+            bs.bind(UUID.fromString(room),UUID.fromString(user));
+            session.execute(bs);
+        } catch (Exception e) {
+            throw new BackendException("Could not perform a query. " + e.getMessage() +".",e);
+        }
     }
 
-    public void deletePaymentById(){
-
+    public void deletePaymentById(String room, String user, String paymentId) throws BackendException {
+        BoundStatement bs = new BoundStatement(DELETE_PAYMENT_BY_ID);
+        try{
+            bs.bind(UUID.fromString(room),UUID.fromString(user),UUID.fromString(paymentId));
+            session.execute(bs);
+        } catch (Exception e) {
+            throw new BackendException("Could not perform a query. "+ e.getMessage()+ ".",e);
+        }
     }
-
 }

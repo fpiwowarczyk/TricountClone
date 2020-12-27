@@ -1,11 +1,21 @@
 package backend.Payment;
 
+import java.util.UUID;
+
 public class PaymentDTO {
     private String paymentId;
     private String roomId;
     private Double amount;
     private String payer;
     private String receiver;
+
+    public PaymentDTO ( String roomId, Double amount, String payer, String receiver){
+        this.paymentId = UUID.randomUUID().toString();
+        this.roomId = roomId;
+        this.amount = amount;
+        this.payer = payer;
+        this.receiver = receiver;
+    }
 
     public PaymentDTO (String paymentId, String roomId, Double amount, String payer, String receiver){
         this.paymentId = paymentId;
@@ -14,6 +24,7 @@ public class PaymentDTO {
         this.payer = payer;
         this.receiver = receiver;
     }
+
 
     public String getPaymentId() {
         return paymentId;
@@ -53,5 +64,13 @@ public class PaymentDTO {
 
     public void setReceiver(String receiver) {
         this.receiver = receiver;
+    }
+
+    public boolean equals(PaymentDTO payment){
+        return this.paymentId.equals(payment.paymentId) &&
+                this.roomId.equals(payment.roomId) &&
+                this.amount.equals(payment.amount) &&
+                this.payer.equals(payment.payer) &&
+                this.receiver.equals(payment.receiver);
     }
 }

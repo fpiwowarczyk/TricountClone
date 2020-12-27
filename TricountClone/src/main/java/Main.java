@@ -5,7 +5,6 @@ import front.UserInterface;
 import java.io.IOException;
 import java.util.Properties;
 
-import static Tests.BackendTest.*;
 
 
 public class Main {
@@ -27,7 +26,6 @@ public class Main {
 
 		BackendSession backendSession = new BackendSession(contactPoint, keyspace);
 
-		runAllBackendTests(backendSession,true);
 
 		UserInterface UI = new UserInterface(backendSession);
 
