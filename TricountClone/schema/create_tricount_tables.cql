@@ -13,7 +13,7 @@ CREATE TABLE roomResult (
   room UUID,
   user UUID,
   money double,
-  PRIMARY KEY (room)
+  PRIMARY KEY (room,user)
 );
 
 CREATE TABLE Users (
