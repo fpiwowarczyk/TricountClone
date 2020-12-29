@@ -1,15 +1,24 @@
 package backend.RoomResult;
 
 import backend.BackendException;
-import com.datastax.driver.core.PreparedStatement;
-import com.datastax.driver.core.Session;
+import com.datastax.driver.core.*;
+import org.apache.cassandra.cql3.statements.Bound;
+import org.junit.jupiter.api.parallel.Execution;
+
+import java.util.LinkedList;
+import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 
 
 public class RoomResultService {
 
     private final Session session;
 
-    private static PreparedStatement SELECT_ALL_FROM_RESULT;
+    private static PreparedStatement SELECT_RESULTS_FOR_ROOM;
+    private static PreparedStatement SELECT_ALL_RESULTS;
+    private static PreparedStatement DELETE_RESULTS_FOR_ROOM;
+    private static PreparedStatement INSERT_NEW_RESULT_FOR_ROOM;
+
 
     public RoomResultService(Session session) throws BackendException {
         this.session = session;
@@ -19,11 +28,75 @@ public class RoomResultService {
 
     private void prepareStatements() throws BackendException {
         try{
-            SELECT_ALL_FROM_RESULT = session.prepare("SELECT * FROM roomresult");
-
+            SELECT_RESULTS_FOR_ROOM = session.prepare("SELECT * FROM roomresult WHERE room = ?");
+            SELECT_ALL_RESULTS = session.prepare("SELECT * FROM roomresult");
+            DELETE_RESULTS_FOR_ROOM = session.prepare("DELETE FROM roomresult WHERE room = ?");
+            INSERT_NEW_RESULT_FOR_ROOM = session.prepare("INSERT INTO roomresult (room,user,money) VALUES (?,?,?)");
 
         }catch (Exception e){
             throw new BackendException("Could not prepare statements. " + e.getMessage()+".",e);
+        }
+    }
+
+    public LinkedList<RoomResultDTO> selectAllRoomResults() throws BackendException {
+        BoundStatement bs= new BoundStatement(SELECT_ALL_RESULTS);
+        LinkedList<RoomResultDTO> result = new LinkedList<>();
+        ResultSet rs = null;
+        try {
+            rs = session.execute(bs);
+        } catch (Exception e){
+            throw new BackendException("Could not perform a query. "+ e.getMessage()+".",e);
+        }
+
+        for(Row row : rs){
+            String roomId = row.getUUID("room").toString();
+            String user = row.getUUID("user").toString();
+            Double money = row.getDouble("money");
+            result.add(new RoomResultDTO(roomId,user,money));
+        }
+        return result;
+    }
+
+    public LinkedList<RoomResultDTO> selectResultForRoom(String room) throws BackendException {
+        BoundStatement bs = new BoundStatement(SELECT_RESULTS_FOR_ROOM);
+        LinkedList<RoomResultDTO> result = new LinkedList<>();
+        ResultSet rs = null;
+
+        try {
+            bs.bind(UUID.fromString(room));
+            rs = session.execute(bs);
+        } catch (Exception e){
+            throw new BackendException("Could not perform a query. "+ e.getMessage()+".",e);
+        }
+
+        for(Row row : rs){
+            String roomId = row.getUUID("room").toString();
+            String user = row.getUUID("user").toString();
+            Double money = row.getDouble("money");
+            result.add(new RoomResultDTO(roomId,user,money));
+        }
+        return result;
+    }
+
+    public void insertNewResultForRoom(String room,String user,Double money) throws BackendException {
+        BoundStatement bs = new BoundStatement(INSERT_NEW_RESULT_FOR_ROOM);
+
+        try {
+            bs.bind(UUID.fromString(room),UUID.fromString(user),money);
+            session.execute(bs);
+        } catch (Exception e) {
+            throw new BackendException("Could not perform a query. "+e.getMessage() +".",e);
+        }
+    }
+
+    public void deleteResultForRoom(String room) throws BackendException {
+        BoundStatement bs = new BoundStatement(DELETE_RESULTS_FOR_ROOM);
+
+        try{
+            bs.bind(UUID.fromString(room));
+            session.execute(bs);
+        } catch (Exception e){
+            throw new BackendException("Could not perform a query. "+ e.getMessage()+".",e);
         }
     }
 

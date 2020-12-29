@@ -10,11 +10,9 @@ public class RoomResultDTO {
         this.userId = userId;
         this.money = money;
     }
-
     public String getRoomId() {
         return roomId;
     }
-
     public String getUserId() {
         return userId;
     }

@@ -2,7 +2,7 @@ package backend;
 
 import backend.Payment.PaymentControler;
 import backend.Room.RoomControler;
-import backend.RoomResult.RoomResultControler;
+import backend.RoomResult.RoomResultController;
 import backend.User.UserControler;
 import com.datastax.driver.core.*;
 
@@ -15,7 +15,7 @@ public class BackendSession {
 
     public PaymentControler paymentControler;
     public RoomControler roomControler;
-    public RoomResultControler roomResultControler;
+    public RoomResultController roomResultController;
     public UserControler userControler;
 
     public BackendSession(String contactPoint, String keyspace) throws BackendException {
@@ -31,10 +31,9 @@ public class BackendSession {
     private void initializeData() throws BackendException {
         this.paymentControler = new PaymentControler(session);
         this.roomControler = new RoomControler(session);
-       // this.roomResultControler = new RoomResultControler(session);
+        this.roomResultController = new RoomResultController(session);
         this.userControler = new UserControler(session);
     }
-
 
     public void endSession() throws BackendException {
         try {
@@ -45,6 +44,4 @@ public class BackendSession {
             throw new BackendException("Could not connect to the cluster. " + e.getMessage() + ".", e);
         }
     }
-
-
 }
