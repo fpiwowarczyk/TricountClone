@@ -17,8 +17,8 @@ public class RoomControler {
         return this.roomService.selectAllRooms();
     }
 
-    public RoomDTO getRoom(String name) throws BackendException {
-        return this.roomService.selectRoomByName(name);
+    public RoomDTO getRoom(String roomId) throws BackendException {
+        return this.roomService.selectRoomById(roomId);
     }
 
     public void addRoom(String name,String roomId) throws BackendException {

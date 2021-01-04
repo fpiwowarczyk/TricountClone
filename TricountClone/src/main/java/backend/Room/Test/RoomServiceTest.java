@@ -3,8 +3,6 @@ package backend.Room.Test;
 import backend.BackendException;
 import backend.Room.RoomDTO;
 import backend.Room.RoomService;
-import backend.User.UserDTO;
-import backend.User.UserService;
 import com.datastax.driver.core.Cluster;
 import com.datastax.driver.core.Session;
 import org.junit.After;
@@ -57,7 +55,7 @@ class RoomServiceTest {
         roomService.insertRoom(room1.getName(),room1.getRoomId());
         roomService.insertRoom(room2.getName(),room2.getRoomId());
 
-        RoomDTO room= roomService.selectRoomByName(room1.getName());
+        RoomDTO room= roomService.selectRoomById(room1.getRoomId());
 
         Assertions.assertTrue(room.equals(room1));
         Assertions.assertFalse(room.equals(room2));

@@ -28,7 +28,7 @@ public class Main {
 
         UserInterface UI = new UserInterface(backendSession);
 
-        UI.logIn();
+        UI.start();
 
         backendSession.endSession();
 

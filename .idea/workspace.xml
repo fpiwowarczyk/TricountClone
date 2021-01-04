@@ -7,15 +7,8 @@
     <list default="true" id="a1bc95f2-6439-4ea1-90c0-a28d2ba34bc9" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.gradle/6.7/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.7/executionHistory/executionHistory.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/6.7/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.7/executionHistory/executionHistory.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AdventOfCode/src/com/company/Day1/FirstTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/AdventOfCode/src/com/company/Day1/FirstTask.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AdventOfCode/src/com/company/Day2/Passwords.java" beforeDir="false" afterPath="$PROJECT_DIR$/AdventOfCode/src/com/company/Day2/Passwords.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AdventOfCode/src/com/company/Day2/dayTwoInput.txt" beforeDir="false" afterPath="$PROJECT_DIR$/AdventOfCode/src/com/company/Day2/dayTwoInput.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TricountClone/gradle/wrapper/gradle-wrapper.jar" beforeDir="false" afterPath="$PROJECT_DIR$/TricountClone/gradle/wrapper/gradle-wrapper.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TricountClone/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" afterPath="$PROJECT_DIR$/TricountClone/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TricountClone/gradlew" beforeDir="false" afterPath="$PROJECT_DIR$/TricountClone/gradlew" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TricountClone/gradlew.bat" beforeDir="false" afterPath="$PROJECT_DIR$/TricountClone/gradlew.bat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TricountClone/src/main/java/backend/Payment/PaymentServiceTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/TricountClone/src/main/java/backend/Payment/PaymentServiceTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -25,8 +18,26 @@
   <component name="CodeInsightWorkspaceSettings">
     <option name="optimizeImportsOnTheFly" value="true" />
   </component>
+  <component name="ExternalProjectsManager">
+    <system id="GRADLE">
+      <state>
+        <task path="$PROJECT_DIR$/TricountClone/build.gradle">
+          <activation />
+        </task>
+        <projects_view />
+      </state>
+    </system>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
   </component>
   <component name="ProjectId" id="1lIcKwLtjyHDqTQ5UI4oYYrAhU5" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
@@ -40,22 +51,23 @@
     <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="external.system.task.project.file.to.start" value="$PROJECT_DIR$/TricountClone" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/TricountClone" />
-    <property name="project.structure.last.edited" value="Modules" />
-    <property name="project.structure.proportion" value="0.0" />
+    <property name="project.structure.last.edited" value="Project" />
+    <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
-    <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
+    <property name="settings.editor.selected.configurable" value="reference.settingsdialog.project.gradle" />
   </component>
   <component name="RunAnythingCache">
     <option name="myCommands">
       <command value="gradle build" />
     </option>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Gradle./home/filip/Projects/TricountClone [build]">
     <configuration name="/home/filip/Projects/TricountClone [build]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
-        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$/TricountClone" />
         <option name="externalSystemIdString" value="GRADLE" />
         <option name="scriptParameters" value="" />
         <option name="taskDescriptions">
@@ -73,6 +85,29 @@
       <DebugAllEnabled>false</DebugAllEnabled>
       <method v="2" />
     </configuration>
+    <configuration name="/home/filip/Projects/TricountClone/TricountClone/build.gradle" type="GradleRunConfiguration" factoryName="Gradle">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$/TricountClone/build.gradle" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list />
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Gradle./home/filip/Projects/TricountClone/TricountClone/build.gradle" />
+      <item itemvalue="Gradle./home/filip/Projects/TricountClone [build]" />
+    </list>
     <recent_temporary>
       <list>
         <item itemvalue="Gradle./home/filip/Projects/TricountClone [build]" />
@@ -104,5 +139,19 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/TricountClone/src/main/java/backend/Room/RoomService.java</url>
+          <line>25</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/TricountClone$_home_filip_Projects_TricountClone__build_.ic" NAME="$PROJECT_DIR$/../TricountClone [build] Coverage Results" MODIFIED="1609788174525" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
   </component>
 </project>

@@ -16,6 +16,13 @@ public class User {
         this.rooms = rooms;
     }
 
+    public User(String name, String password, String userId) {
+        this.name = name;
+        this.password = password;
+        this.userId = userId;
+        this.rooms = new LinkedList<>();
+    }
+
     public String getName() {
         return this.name;
     }

@@ -11,7 +11,7 @@ public class RoomService {
     private final Session session;
 
     private static PreparedStatement SELECT_ALL_ROOMS;
-    private static PreparedStatement SELECT_ROOM_BY_NAME;
+    private static PreparedStatement SELECT_ROOM_BY_ID;
     private static PreparedStatement INSERT_ROOM;
     private static PreparedStatement DELETE_ROOM_BY_ID;
 
@@ -24,7 +24,7 @@ public class RoomService {
     private void prepareStatements() throws BackendException {
         try {
             SELECT_ALL_ROOMS = session.prepare("SELECT * FROM room;");
-            SELECT_ROOM_BY_NAME = session.prepare("SELECT * FROM room WHERE name = ?");
+            SELECT_ROOM_BY_ID = session.prepare("SELECT * FROM room WHERE roomId = ?");
             INSERT_ROOM = session.prepare("INSERT INTO room (name,roomId) VALUES (?,?)");
             DELETE_ROOM_BY_ID = session.prepare("DELETE FROM room WHERE name = ? AND roomId = ?");
         } catch (Exception e) {
@@ -52,13 +52,13 @@ public class RoomService {
         return rooms;
     }
 
-    public RoomDTO selectRoomByName(String name) throws BackendException {
-        BoundStatement bs = new BoundStatement(SELECT_ROOM_BY_NAME);
+    public RoomDTO selectRoomById(String roomId) throws BackendException {
+        BoundStatement bs = new BoundStatement(SELECT_ROOM_BY_ID);
 
         ResultSet rs = null;
 
         try {
-            bs.bind(name);
+            bs.bind(UUID.fromString(roomId));
             rs = session.execute(bs);
         } catch (Exception e) {
             throw new BackendException("Could not perform q query. " + e.getMessage() + ".", e);
