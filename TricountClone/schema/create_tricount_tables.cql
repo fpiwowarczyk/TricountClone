@@ -6,7 +6,7 @@ USE Tricount;
 CREATE TABLE Room (
   roomId UUID,
   name varchar,
-  PRIMARY KEY (name,roomId)
+  PRIMARY KEY (roomId,name)
 );
 
 CREATE TABLE roomResult (
