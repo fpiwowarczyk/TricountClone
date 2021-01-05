@@ -50,10 +50,12 @@ public class UserInterface {
         String name = scan.nextLine();
         System.out.print("Password: ");
         String password = scan.nextLine();
-        System.out.println("You have no rooms so we will add you test room");
-        RoomDTO testRoom = new RoomDTO("TestRoom");
-        backendSession.roomControler.addRoom(testRoom.getName(), testRoom.getRoomId());
-        backendSession.userControler.insertUser(name, password, testRoom.getRoomId());
+        if (!name.isEmpty() && !password.isEmpty()) {
+            System.out.println("You have no rooms so we will add you test room");
+            RoomDTO testRoom = new RoomDTO("TestRoom");
+            backendSession.roomControler.addRoom(testRoom.getName(), testRoom.getRoomId());
+            backendSession.userControler.insertUser(name, password, testRoom.getRoomId());
+        }
     }
 
     public void logIn() throws BackendException {
@@ -89,7 +91,7 @@ public class UserInterface {
 
     public void printMenu() throws BackendException {
         while(logged){
-            System.out.println("Menu:\n1.Show your rooms\n2.Add room\n3.Logout");
+            System.out.println("Menu:\n1.Show your rooms\n2.Add room\n3.Logout\n4.Select room");
             String choice = scan.nextLine();
             switch (choice){
                 case "1":
@@ -100,6 +102,9 @@ public class UserInterface {
                     break;
                 case "3":
                     logged = false;
+                    break;
+                case "4":
+                    selectRoom();
                     break;
                 default:
                     System.out.println("There is no option like that, chose again");
@@ -121,9 +126,31 @@ public class UserInterface {
         System.out.println("Showing rooms");
     }
 
-    public void addRoom(){
+    public void addRoom() throws BackendException{
         System.out.println("Adding room");
+        System.out.print("Room name: ");
+        String roomName = scan.nextLine();
+        if(!roomName.isEmpty()){
+            RoomDTO roomDTO = new RoomDTO(roomName);
+            backendSession.roomControler.addRoom(roomDTO.getName(),roomDTO.getRoomId());
+            backendSession.userControler.insertUser(user.getName(),user.getPassword(),roomDTO.getRoomId());
+            user.addRoom(roomDTO.getRoomId());
+            System.out.println("A new room \""+roomDTO.getName()+"\" has been created.");
+        }
     }
 
-
+    public void selectRoom() throws BackendException{
+        System.out.println("Select the room number\n0.Back");
+        showRooms();
+        int roomNr = scan.nextInt();
+        scan.nextLine();
+        if(roomNr != 0) {
+            if (roomNr <= user.getRooms().size()) {
+                //showDetailsRoom(roomNr-1)<- metoda zwracająca szczegóły wybranego pokoju/lista pokoi z showRooms()
+                //                            mogłaby być globalna i z niej można by wyciągać roomid pokoju o podanym indexie.
+            }else {
+                System.out.println("Could not find room\n");
+            }
+        }
+    }
 }
