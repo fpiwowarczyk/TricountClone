@@ -3,6 +3,7 @@ package front;
 import backend.BackendException;
 import backend.BackendSession;
 import backend.Room.RoomDTO;
+import backend.RoomResult.RoomResultDTO;
 import backend.User.UserDTO;
 
 
@@ -141,15 +142,48 @@ public class UserInterface {
 
     public void selectRoom() throws BackendException{
         System.out.println("Select the room number\n0.Back");
-        showRooms();
+        showRooms(); //<-nie wiem czy to potrzebne
         int roomNr = scan.nextInt();
         scan.nextLine();
         if(roomNr != 0) {
             if (roomNr <= user.getRooms().size()) {
-                //showDetailsRoom(roomNr-1)<- metoda zwracająca szczegóły wybranego pokoju/lista pokoi z showRooms()
-                //                            mogłaby być globalna i z niej można by wyciągać roomid pokoju o podanym indexie.
+                printMenuDetails(roomNr);
             }else {
                 System.out.println("Could not find room\n");
+            }
+        }
+    }
+
+    public void showDetailsRoom(int roomNr) throws BackendException{ //Do poprawy -> imiona uczestników(potrzebne zmiany albo inny sposób
+        LinkedList<RoomResultDTO> roomResultDTOS = backendSession.roomResultController.getRoomResults(user.getRooms().get(roomNr-1));
+        String roomName = backendSession.roomControler.getRoom(roomResultDTOS.get(0).getRoomId()).getName();
+        System.out.println("Room details: "+roomName);
+        for(RoomResultDTO room: roomResultDTOS){
+            System.out.println("User: "+room.getUserId()+" "+room.getMoney());
+        }
+    }
+
+    public void printMenuDetails(int roomNr) throws BackendException {
+        boolean finish = true;
+        while (finish) {
+            showDetailsRoom(roomNr); //<-nie jestem pewien właściwości tego wywołania w tym miejscu
+            System.out.println("Menu:\n1.Add payment\n2.Show payment history\n3.Reimburse\n4.Back");
+            String choice = scan.nextLine();
+            switch (choice){
+                case "1":
+                    //addPayment();
+                    break;
+                case "2":
+                    //showPaymentHistory();
+                    break;
+                case "3":
+                    //Reimburse();
+                    break;
+                case "4":
+                    finish = false; //<-czy to powinno wracać do wyboru pokoju czy do głównego menu?
+                    break;
+                default:
+                    System.out.println("There is no option like that, chose again");
             }
         }
     }
