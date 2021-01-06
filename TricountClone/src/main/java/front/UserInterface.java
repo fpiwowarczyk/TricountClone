@@ -41,7 +41,7 @@ public class UserInterface {
                     finish = false;
                     break;
                 default:
-                    System.out.println("There are not valid choices like: " + choice + "\nPlease chose again\n");
+                    System.out.println("There are no valid choices like: " + choice + "\nPlease chose again\n");
             }
         }
     }
@@ -91,10 +91,10 @@ public class UserInterface {
     }
 
     public void printMenu() throws BackendException {
-        while(logged){
+        while (logged) {
             System.out.println("Menu:\n1.Show your rooms\n2.Add room\n3.Logout\n4.Select room");
             String choice = scan.nextLine();
-            switch (choice){
+            switch (choice) {
                 case "1":
                     showRooms();
                     break;
@@ -114,52 +114,83 @@ public class UserInterface {
     }
 
     public void showRooms() throws BackendException {
+        System.out.println("-----Showing rooms-----");
         LinkedList<String> userRooms = this.user.getRooms();
         LinkedList<RoomDTO> rooms = new LinkedList<>();
-        for(String room: userRooms){
+        for (String room : userRooms) {
             rooms.add(backendSession.roomControler.getRoom(room));
         }
-        int i =0;
-        for(RoomDTO room: rooms){
+        int i = 0;
+        for (RoomDTO room : rooms) {
             i++;
-            System.out.println(i+"."+room.getName());
+            System.out.println(i + "." + room.getName()+"    ID:"+room.getRoomId());
         }
-        System.out.println("Showing rooms");
+        System.out.println("--------------------");
+
     }
 
-    public void addRoom() throws BackendException{
-        System.out.println("Adding room");
+    public void addRoom() throws BackendException {
+        boolean selecting = true;
+        while (selecting){
+            System.out.println("Menu:\n1.Add new room\n2.Add room from Id \n3.Back");
+            String choice = scan.nextLine();
+            switch (choice) {
+                case "1":
+                    addNewRoom();
+                    break;
+                case "2":
+                    addRoomFromId();
+                    break;
+                case "3":
+                    selecting = false;
+                    break;
+                default:
+                    System.out.println("There are no valid options like:" + choice);
+            }
+        }
+
+
+    }
+
+    public void addNewRoom() throws BackendException {
         System.out.print("Room name: ");
         String roomName = scan.nextLine();
-        if(!roomName.isEmpty()){
+        if (!roomName.isEmpty()) {
             RoomDTO roomDTO = new RoomDTO(roomName);
-            backendSession.roomControler.addRoom(roomDTO.getName(),roomDTO.getRoomId());
-            backendSession.userControler.insertUser(user.getName(),user.getPassword(),roomDTO.getRoomId());
+            backendSession.roomControler.addRoom(roomDTO.getName(), roomDTO.getRoomId());
+            backendSession.userControler.insertUser(user.getName(), user.getPassword(), roomDTO.getRoomId());
+            backendSession.roomResultController.addRoomResult(roomDTO.getRoomId(), user.getUserId(), user.getName(), 0.0);
             user.addRoom(roomDTO.getRoomId());
-            System.out.println("A new room \""+roomDTO.getName()+"\" has been created.");
+            System.out.println("A new room \"" + roomDTO.getName() + "\" has been created.");
         }
+        System.out.print("----Room added----");
     }
 
-    public void selectRoom() throws BackendException{
-        System.out.println("Select the room number\n0.Back");
-        showRooms(); //<-nie wiem czy to potrzebne
-        int roomNr = scan.nextInt();
-        scan.nextLine();
-        if(roomNr != 0) {
-            if (roomNr <= user.getRooms().size()) {
-                printMenuDetails(roomNr);
-            }else {
-                System.out.println("Could not find room\n");
+    public void addRoomFromId() throws BackendException {
+        System.out.print("Room Id: ");
+        String roomId = scan.nextLine();
+        if(!roomId.isEmpty()){
+            RoomDTO roomDTO = backendSession.roomControler.getRoom(roomId);
+            if(roomDTO == null){
+                System.out.println("Couldn't find your room");
+            } else {
+                backendSession.userControler.insertUser(user.getName(),user.getPassword(),roomDTO.getRoomId());
+                backendSession.roomResultController.addRoomResult(roomId,user.getUserId(),user.getName(),0.0);
             }
         }
     }
 
-    public void showDetailsRoom(int roomNr) throws BackendException{ //Do poprawy -> imiona uczestników(potrzebne zmiany albo inny sposób
-        LinkedList<RoomResultDTO> roomResultDTOS = backendSession.roomResultController.getRoomResults(user.getRooms().get(roomNr-1));
-        String roomName = backendSession.roomControler.getRoom(roomResultDTOS.get(0).getRoomId()).getName();
-        System.out.println("Room details: "+roomName);
-        for(RoomResultDTO room: roomResultDTOS){
-            System.out.println("User: "+room.getUserId()+" "+room.getMoney());
+    public void selectRoom() throws BackendException {
+        System.out.println("Select the room number\n0.Back");
+        showRooms(); //<-nie wiem czy to potrzebne | Mysle ze potrzebne ~FP
+        int roomNr = scan.nextInt();
+        scan.nextLine();
+        if (roomNr != 0) {
+            if (roomNr <= user.getRooms().size()) {
+                printMenuDetails(roomNr);
+            } else {
+                System.out.println("Could not find room\n");
+            }
         }
     }
 
@@ -167,19 +198,22 @@ public class UserInterface {
         boolean finish = true;
         while (finish) {
             showDetailsRoom(roomNr); //<-nie jestem pewien właściwości tego wywołania w tym miejscu
-            System.out.println("Menu:\n1.Add payment\n2.Show payment history\n3.Reimburse\n4.Back");
+            System.out.println("Menu:\n1.Add payment\n2.Add new user\n3.Show payment history\n4.Reimburse\n5.Back");
             String choice = scan.nextLine();
-            switch (choice){
+            switch (choice) {
                 case "1":
                     //addPayment();
                     break;
                 case "2":
-                    //showPaymentHistory();
+                    //Add new user
                     break;
                 case "3":
-                    //Reimburse();
+                    //showPaymentHistory();
                     break;
                 case "4":
+                    //Reimburse();
+                    break;
+                case "5":
                     finish = false; //<-czy to powinno wracać do wyboru pokoju czy do głównego menu? | Moim zdaniem powinno sie wracac tam gdzie bylo sie poprezednio ~FP
                     break;
                 default:
@@ -187,4 +221,15 @@ public class UserInterface {
             }
         }
     }
+
+    public void showDetailsRoom(int roomNr) throws BackendException {
+        System.out.println("Selecting room nr" + (roomNr - 1));
+        LinkedList<RoomResultDTO> roomResultDTOS = backendSession.roomResultController.getRoomResults(user.getRooms().get(roomNr - 1));
+        String roomName = backendSession.roomControler.getRoom(roomResultDTOS.get(0).getRoomId()).getName();
+        System.out.println("Room details: " + roomName);
+        for (RoomResultDTO room : roomResultDTOS) {
+            System.out.println("User: " + room.getUserName() + " " + room.getMoney());
+        }
+    }
+
 }
