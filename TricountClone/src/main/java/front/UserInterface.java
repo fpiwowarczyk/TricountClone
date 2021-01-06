@@ -202,7 +202,7 @@ public class UserInterface {
             String choice = scan.nextLine();
             switch (choice) {
                 case "1":
-                    //addPayment();
+                    addPayment();
                     break;
                 case "2":
                     //Add new user
@@ -220,6 +220,35 @@ public class UserInterface {
                     System.out.println("There is no option like that, chose again");
             }
         }
+    }
+
+    public void addPayment(){
+        boolean paying = true;
+        while(paying){
+            System.out.println("Select what are you doing:\n1.Pay for one user\n2.Pay for everyone in room\n3.Back");
+            String choice = scan.nextLine();
+            switch (choice){
+                case "1":
+                    payForOne();
+                    break;
+                case "2":
+                    payForEveryone();
+                    break;
+                case "3":
+                    paying = false;
+                    break;
+                default:
+                    System.out.println("There are no valid options like: "+choice);
+            }
+        }
+    }
+
+    public void payForOne(){
+        System.out.println("Paying for one");
+    }
+
+    public void payForEveryone(){
+        System.out.println("Paying for everyone");
     }
 
     public void showDetailsRoom(int roomNr) throws BackendException {
