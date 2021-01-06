@@ -32,4 +32,8 @@ public class RoomResultDTO {
     public void setMoney(Double money){
         this.money = money;
     }
+
+    public String toString(){
+        return "RoomId:"+ this.roomId+"\nUserId:"+this.userId+"\nUserName:"+this.userName+"\nMoney:"+this.money;
+    }
 }
