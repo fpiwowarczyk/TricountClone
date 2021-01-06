@@ -180,7 +180,7 @@ public class UserInterface {
                     //Reimburse();
                     break;
                 case "4":
-                    finish = false; //<-czy to powinno wracać do wyboru pokoju czy do głównego menu?
+                    finish = false; //<-czy to powinno wracać do wyboru pokoju czy do głównego menu? | Moim zdaniem powinno sie wracac tam gdzie bylo sie poprezednio ~FP
                     break;
                 default:
                     System.out.println("There is no option like that, chose again");

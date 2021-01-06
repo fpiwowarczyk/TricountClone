@@ -29,33 +29,38 @@ class RoomResultServiceTest {
     @Test
     void shouldAddRoomResultAndRemoveIt() throws BackendException {
         //given
-        RoomResultDTO roomResult1 = new RoomResultDTO("ab036a88-3b36-11eb-adc1-0242ac120002", "ab036a88-3b36-11eb-adc1-0242ac120020", 10.0);
-        RoomResultDTO roomResult2 = new RoomResultDTO("ab036a88-3b36-11eb-adc1-0242ac120002", "ab036a88-3b36-11eb-adc1-0242ac120021", -10.0);
-        RoomResultDTO roomResult3 = new RoomResultDTO("ab036a88-3b36-11eb-adc1-0242ac120002", "ab036a88-3b36-11eb-adc1-0242ac120022", -12.0);
-        RoomResultDTO roomResult4 = new RoomResultDTO("ab036a88-3b36-11eb-adc1-0242ac120002", "ab036a88-3b36-11eb-adc1-0242ac120023", 12.0);
-        RoomResultDTO roomResult5 = new RoomResultDTO("ab036a88-3b36-11eb-adc1-0242ac120003", "ab036a88-3b36-11eb-adc1-0242ac120024", 12.0);
+        RoomResultDTO roomResult1 = new RoomResultDTO("ab036a88-3b36-11eb-adc1-0242ac120002", "ab036a88-3b36-11eb-adc1-0242ac120020","Filip", 10.0);
+        RoomResultDTO roomResult2 = new RoomResultDTO("ab036a88-3b36-11eb-adc1-0242ac120002", "ab036a88-3b36-11eb-adc1-0242ac120021", "Filip",-10.0);
+        RoomResultDTO roomResult3 = new RoomResultDTO("ab036a88-3b36-11eb-adc1-0242ac120002", "ab036a88-3b36-11eb-adc1-0242ac120022", "Filip",-12.0);
+        RoomResultDTO roomResult4 = new RoomResultDTO("ab036a88-3b36-11eb-adc1-0242ac120002", "ab036a88-3b36-11eb-adc1-0242ac120023", "Filip",12.0);
+        RoomResultDTO roomResult5 = new RoomResultDTO("ab036a88-3b36-11eb-adc1-0242ac120003", "ab036a88-3b36-11eb-adc1-0242ac120024", "Ola",12.0);
 
         //when
         this.roomResultService.insertNewResultForRoom(
                 roomResult1.getRoomId(),
                 roomResult1.getUserId(),
+                roomResult1.getUserName(),
                 roomResult1.getMoney());
 
         this.roomResultService.insertNewResultForRoom(
                 roomResult2.getRoomId(),
                 roomResult2.getUserId(),
+                roomResult2.getUserName(),
                 roomResult2.getMoney());
         this.roomResultService.insertNewResultForRoom(
                 roomResult3.getRoomId(),
                 roomResult3.getUserId(),
+                roomResult3.getUserName(),
                 roomResult3.getMoney());
         this.roomResultService.insertNewResultForRoom(
                 roomResult4.getRoomId(),
                 roomResult4.getUserId(),
+                roomResult4.getUserName(),
                 roomResult4.getMoney());
         this.roomResultService.insertNewResultForRoom(
                 roomResult5.getRoomId(),
                 roomResult5.getUserId(),
+                roomResult5.getUserName(),
                 roomResult5.getMoney());
 
         LinkedList<RoomResultDTO> roomResults = this.roomResultService.selectResultForRoom("ab036a88-3b36-11eb-adc1-0242ac120002");

@@ -12,6 +12,7 @@ CREATE TABLE Room (
 CREATE TABLE roomResult (
   room UUID,
   user UUID,
+  userName varchar,
   money double,
   PRIMARY KEY (room,user)
 );

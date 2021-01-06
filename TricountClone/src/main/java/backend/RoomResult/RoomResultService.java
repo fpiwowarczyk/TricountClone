@@ -31,7 +31,7 @@ public class RoomResultService {
             SELECT_RESULTS_FOR_ROOM = session.prepare("SELECT * FROM roomresult WHERE room = ?");
             SELECT_ALL_RESULTS = session.prepare("SELECT * FROM roomresult");
             DELETE_RESULTS_FOR_ROOM = session.prepare("DELETE FROM roomresult WHERE room = ?");
-            INSERT_NEW_RESULT_FOR_ROOM = session.prepare("INSERT INTO roomresult (room,user,money) VALUES (?,?,?)");
+            INSERT_NEW_RESULT_FOR_ROOM = session.prepare("INSERT INTO roomresult (room,user,userName,money) VALUES (?,?,?,?)");
 
         }catch (Exception e){
             throw new BackendException("Could not prepare statements. " + e.getMessage()+".",e);
@@ -51,8 +51,9 @@ public class RoomResultService {
         for(Row row : rs){
             String roomId = row.getUUID("room").toString();
             String user = row.getUUID("user").toString();
+            String userName = row.getString("userName");
             Double money = row.getDouble("money");
-            result.add(new RoomResultDTO(roomId,user,money));
+            result.add(new RoomResultDTO(roomId,user,userName,money));
         }
         return result;
     }
@@ -72,17 +73,18 @@ public class RoomResultService {
         for(Row row : rs){
             String roomId = row.getUUID("room").toString();
             String user = row.getUUID("user").toString();
+            String userName = row.getString("userName");
             Double money = row.getDouble("money");
-            result.add(new RoomResultDTO(roomId,user,money));
+            result.add(new RoomResultDTO(roomId,user,userName,money));
         }
         return result;
     }
 
-    public void insertNewResultForRoom(String room,String user,Double money) throws BackendException {
+    public void insertNewResultForRoom(String room,String user,String userName,Double money) throws BackendException {
         BoundStatement bs = new BoundStatement(INSERT_NEW_RESULT_FOR_ROOM);
 
         try {
-            bs.bind(UUID.fromString(room),UUID.fromString(user),money);
+            bs.bind(UUID.fromString(room),UUID.fromString(user),userName,money);
             session.execute(bs);
         } catch (Exception e) {
             throw new BackendException("Could not perform a query. "+e.getMessage() +".",e);

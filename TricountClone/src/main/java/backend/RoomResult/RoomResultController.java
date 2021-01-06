@@ -21,8 +21,8 @@ public class RoomResultController {
         return this.roomResultService.selectResultForRoom(room);
     }
 
-    public void addRoomResult(String room,String user,Double money) throws BackendException {
-        roomResultService.insertNewResultForRoom(room,user,money);
+    public void addRoomResult(String room, String user, String userName, Double money) throws BackendException {
+        roomResultService.insertNewResultForRoom(room, user, userName, money);
     }
 
     public void deleteRoomResult(String room) throws BackendException {
