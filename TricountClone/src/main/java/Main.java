@@ -40,3 +40,7 @@ public class Main {
 //
 //
 //
+
+
+// #TODO Jakie problemy sie pojawily
+// Jak dodawalem usera to nie lapalo ze go dodaje z jakiegos powodu. Rozwiazanie trzeba bylo lepiej okreslic pokoj tzn <keyspace>.table a nie tylko table przy insercie

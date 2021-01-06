@@ -36,4 +36,8 @@ public class RoomDTO {
         return this.name.equals(room.getName()) &&
                 this.roomId.equals(room.getRoomId());
     }
+
+    public boolean isEmpty(){
+        return this.name == null && this.roomId == null;
+    }
 }

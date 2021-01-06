@@ -172,7 +172,8 @@ public class UserInterface {
         String roomId = scan.nextLine();
         if (!roomId.isEmpty()) {
             RoomDTO roomDTO = backendSession.roomControler.getRoom(roomId);
-            if (roomDTO == null) {
+            System.out.println(roomDTO.getName());
+            if (roomDTO.isEmpty()) {
                 System.out.println("Couldn't find your room");
             } else {
                 backendSession.userControler.insertUser(user.getName(), user.getPassword(), roomDTO.getRoomId());
@@ -248,7 +249,7 @@ public class UserInterface {
     public void payForOne(int roomNr) throws BackendException {
         LinkedList<RoomResultDTO> roomResultDTOS = backendSession.roomResultController.getRoomResults(user.getRooms().get(roomNr - 1));
         int i = 0;
-        System.out.println("Chose for whom are you paying");
+        System.out.println("Chose for whom are you paying for");
         for (RoomResultDTO roomResult : roomResultDTOS) {
             i++;
             System.out.println(i + "." + roomResult.getUserName());
@@ -268,11 +269,27 @@ public class UserInterface {
             }
         }
         updateRoomResults(roomResultDTOS);
-
     }
 
-    public void payForEveryone(int roomNr) {
-        System.out.println("Paying for everyone");
+    public void payForEveryone(int roomNr) throws BackendException {
+        LinkedList<RoomResultDTO> roomResultDTOS = backendSession.roomResultController.getRoomResults(user.getRooms().get(roomNr - 1));
+        System.out.println("WARNING: IF YOU ARE PAYING FOR EVEYONE YOU PAY ALSO FOR YOURSELF\n" +
+                "How much did you pay?     If he paid for you start with - sign");
+        String inputMoney = scan.nextLine();
+        Double money = Double.parseDouble(inputMoney);
+        Double splitedMoney = money/roomResultDTOS.size();
+        for (RoomResultDTO roomResult : roomResultDTOS) {
+            Double startValue = roomResult.getMoney();
+            Double endValue = startValue - splitedMoney;
+            roomResult.setMoney(endValue);
+            if (roomResult.getUserId().equals(this.user.getUserId())) {
+                startValue = roomResult.getMoney();
+                endValue = startValue + money;
+                roomResult.setMoney(endValue);
+            }
+        }
+
+        updateRoomResults(roomResultDTOS);
     }
 
     public void updateRoomResults(LinkedList<RoomResultDTO> roomResultDTOS) throws BackendException {
