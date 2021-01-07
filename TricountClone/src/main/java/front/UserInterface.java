@@ -178,6 +178,7 @@ public class UserInterface {
             } else {
                 backendSession.userControler.insertUser(user.getName(), user.getPassword(), roomDTO.getRoomId());
                 backendSession.roomResultController.addRoomResult(roomId, user.getUserId(), user.getName(), 0.0);
+                mapUser(this.user.getName(),this.user.getPassword());
             }
         }
     }
@@ -200,24 +201,15 @@ public class UserInterface {
         boolean finish = true;
         RoomDTO room;
         while (finish) {
-            showDetailsRoom(roomNr); //<-nie jestem pewien właściwości tego wywołania w tym miejscu | W sumie to nie moze tak dzialac jak zmienia sie kolejnosc pokojow ~ FP
-            System.out.println("Menu:\n1.Add payment\n2.Add new user\n3.Show payment history\n4.Reimburse\n5.Back");
+            showDetailsRoom(roomNr);
+            System.out.println("Menu:\n1.Add payment\n3.Back");
             String choice = scan.nextLine();
             switch (choice) {
                 case "1":
                     addPayment(roomNr);
                     break;
                 case "2":
-                    //Add new user
-                    break;
-                case "3":
-                    //showPaymentHistory();
-                    break;
-                case "4":
-                    //Reimburse();
-                    break;
-                case "5":
-                    finish = false; //<-czy to powinno wracać do wyboru pokoju czy do głównego menu?
+                    finish = false;
                     break;
                 default:
                     System.out.println("There is no option like that, chose again");
@@ -248,19 +240,29 @@ public class UserInterface {
 
     public void payForOne(int roomNr) throws BackendException {
         LinkedList<RoomResultDTO> roomResultDTOS = backendSession.roomResultController.getRoomResults(user.getRooms().get(roomNr - 1));
+        boolean choosing = true;
+        String receiver = "";
         int i = 0;
-        System.out.println("Chose for whom are you paying for");
-        for (RoomResultDTO roomResult : roomResultDTOS) {
-            i++;
-            System.out.println(i + "." + roomResult.getUserName());
+        while (choosing) {
+            i = 0;
+            System.out.println("Chose for whom are you paying for");
+            for (RoomResultDTO roomResult : roomResultDTOS) {
+                i++;
+                System.out.println(i + "." + roomResult.getUserName());
+            }
+            receiver = scan.nextLine();
+            if (Integer.parseInt(receiver) <= i && Integer.parseInt(receiver) > 0) {
+                choosing = false;
+            } else {
+                System.out.println("Please chose valid option");
+            }
         }
-        String receiver = scan.nextLine();
         System.out.println("How much did you pay?     If he paid for you start with - sign");
         String inputMoney = scan.nextLine();
         Double money = Double.parseDouble(inputMoney);
         Double startValue = roomResultDTOS.get(i - 1).getMoney();
         Double endValue = startValue - money;
-        roomResultDTOS.get(i - 1).setMoney(endValue);
+        roomResultDTOS.get(Integer.parseInt(receiver) - 1).setMoney(endValue);
         for (RoomResultDTO roomResult : roomResultDTOS) {
             if (roomResult.getUserId().equals(this.user.getUserId())) {
                 startValue = roomResult.getMoney();
@@ -277,7 +279,7 @@ public class UserInterface {
                 "How much did you pay?     If he paid for you start with - sign");
         String inputMoney = scan.nextLine();
         Double money = Double.parseDouble(inputMoney);
-        Double splitedMoney = money/roomResultDTOS.size();
+        Double splitedMoney = money / roomResultDTOS.size();
         for (RoomResultDTO roomResult : roomResultDTOS) {
             Double startValue = roomResult.getMoney();
             Double endValue = startValue - splitedMoney;

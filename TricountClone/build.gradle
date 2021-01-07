@@ -44,7 +44,6 @@ dependencies {
 }
 
 configurations.all {
-    exclude module: 'logback-classic'
 }
 
 project.buildDir = 'bin'
