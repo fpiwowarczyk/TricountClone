@@ -27,5 +27,8 @@ public class UserControler{
     public void deleteUser(String name, String password, String userId) throws BackendException {
         userService.deleteUser(name,password,userId);
     }
+    public void deleteUserRoom(String name, String password, String userId, String roomId) throws BackendException {
+        userService.deleteUserRoom(name,password,userId,roomId);
+    }
 
 }

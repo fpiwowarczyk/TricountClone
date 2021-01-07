@@ -17,6 +17,7 @@ public class RoomResultService {
     private static PreparedStatement SELECT_RESULTS_FOR_ROOM;
     private static PreparedStatement SELECT_ALL_RESULTS;
     private static PreparedStatement DELETE_RESULTS_FOR_ROOM;
+    private static PreparedStatement DELETE_USER_RESULTS_FOR_ROOM;
     private static PreparedStatement INSERT_NEW_RESULT_FOR_ROOM;
 
 
@@ -31,6 +32,7 @@ public class RoomResultService {
             SELECT_RESULTS_FOR_ROOM = session.prepare("SELECT * FROM roomresult WHERE room = ?");
             SELECT_ALL_RESULTS = session.prepare("SELECT * FROM roomresult");
             DELETE_RESULTS_FOR_ROOM = session.prepare("DELETE FROM roomresult WHERE room = ?");
+            DELETE_USER_RESULTS_FOR_ROOM = session.prepare("DELETE FROM roomresult WHERE room = ? and user = ?");
             INSERT_NEW_RESULT_FOR_ROOM = session.prepare("INSERT INTO roomresult (room,user,userName,money) VALUES (?,?,?,?)");
 
         }catch (Exception e){
@@ -96,6 +98,17 @@ public class RoomResultService {
 
         try{
             bs.bind(UUID.fromString(room));
+            session.execute(bs);
+        } catch (Exception e){
+            throw new BackendException("Could not perform a query. "+ e.getMessage()+".",e);
+        }
+    }
+
+    public void deleteUserResultForRoom(String room,String user) throws BackendException {
+        BoundStatement bs = new BoundStatement(DELETE_USER_RESULTS_FOR_ROOM);
+
+        try{
+            bs.bind(UUID.fromString(room),UUID.fromString(user));
             session.execute(bs);
         } catch (Exception e){
             throw new BackendException("Could not perform a query. "+ e.getMessage()+".",e);

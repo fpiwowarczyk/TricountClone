@@ -15,6 +15,7 @@ public class UserService {
     private static PreparedStatement SELECT_USER_BY_ID;
     private static PreparedStatement INSERT_USER;
     private static PreparedStatement DELETE_USER;
+    private static PreparedStatement DELETE_USER_ROOM;
 
 
     private static final String USER_FORMAT = "UserId : %-20s Name: %-10s Pass: %-20s roomId: %-10s\n";
@@ -32,6 +33,7 @@ public class UserService {
             SELECT_USER_BY_ID = session.prepare("SELECT * FROM users WHERE name = ? AND password = ? AND userId = ?");
             INSERT_USER = session.prepare("INSERT INTO tricount.users (name,password,userId,roomId) VALUES (?,?,?,?);");
             DELETE_USER = session.prepare("DELETE FROM users WHERE name=? AND password=? AND userID =?;");
+            DELETE_USER_ROOM = session.prepare("DELETE FROM users WHERE name=? AND password=? AND userID =? AND roomId = ?;");
         } catch (Exception e) {
             throw new BackendException("Could not prepare statements. " + e.getMessage() + ".", e);
         }
@@ -107,6 +109,17 @@ public class UserService {
 
         try {
             bs.bind(name, password, UUID.fromString(userId));
+            session.execute(bs);
+        } catch (Exception e) {
+            throw new BackendException("Could not perform a query. " + e.getMessage() + ".", e);
+        }
+    }
+
+    public void deleteUserRoom(String name, String password, String userId, String roomId) throws BackendException {
+        BoundStatement bs = new BoundStatement(DELETE_USER_ROOM);
+
+        try {
+            bs.bind(name, password, UUID.fromString(userId),UUID.fromString(roomId));
             session.execute(bs);
         } catch (Exception e) {
             throw new BackendException("Could not perform a query. " + e.getMessage() + ".", e);

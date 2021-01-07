@@ -70,13 +70,15 @@ ab036100-3b36-11eb-adc1-0242ac120003,
 ab036999-3b36-11eb-adc1-0242ac120321,
 ab036100-3b36-11eb-adc1-0242ac120123);
 
-INSERT INTO roomresult (room,user,money) VALUES
+INSERT INTO roomresult (room,user,userName,money) VALUES
                         (ab036a88-3b36-11eb-adc1-0242ac120002,
                         ab036a88-3b36-11eb-adc1-0242ac120020,
+                        'Test',
                         -10.0);
 
-INSERT INTO roomresult (room,user,money) VALUES
+INSERT INTO roomresult (room,user,userName,money) VALUES
                         (ab036a88-3b36-11eb-adc1-0242ac120002,
                         ab036a88-3b36-11eb-adc1-0242ac120034,
+                        'Test2',
                         10.0);
 

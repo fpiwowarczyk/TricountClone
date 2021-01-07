@@ -28,4 +28,8 @@ public class RoomResultController {
     public void deleteRoomResult(String room) throws BackendException {
         roomResultService.deleteResultForRoom(room);
     }
+
+    public void deleteUserRoomResult(String room,String user) throws BackendException {
+        roomResultService.deleteUserResultForRoom(room, user);
+    }
 }
