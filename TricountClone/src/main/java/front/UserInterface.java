@@ -8,8 +8,7 @@ import backend.User.UserDTO;
 import org.apache.commons.math3.analysis.integration.RombergIntegrator;
 
 
-import java.util.LinkedList;
-import java.util.Scanner;
+import java.util.*;
 
 public class UserInterface {
     private final BackendSession backendSession;
@@ -57,7 +56,7 @@ public class UserInterface {
             RoomDTO testRoom = new RoomDTO("TestRoom");
             backendSession.roomControler.addRoom(testRoom.getName(), testRoom.getRoomId());
             backendSession.userControler.insertUser(name, password, testRoom.getRoomId());
-            backendSession.roomResultController.addRoomResult(testRoom.getRoomId(),backendSession.userControler.getUser(name,password).get(0).getUserId(), name, 0.0);
+            backendSession.roomResultController.addRoomResult(testRoom.getRoomId(), backendSession.userControler.getUser(name, password).get(0).getUserId(), name, 0.0);
 
         }
     }
@@ -180,7 +179,7 @@ public class UserInterface {
             } else {
                 backendSession.userControler.insertUser(user.getName(), user.getPassword(), roomDTO.getRoomId());
                 backendSession.roomResultController.addRoomResult(roomId, user.getUserId(), user.getName(), 0.0);
-                mapUser(this.user.getName(),this.user.getPassword());
+                mapUser(this.user.getName(), this.user.getPassword());
             }
         }
     }
@@ -198,7 +197,7 @@ public class UserInterface {
                 } else {
                     System.out.println("Could not find room\n");
                 }
-            }else {
+            } else {
                 finish = false;
             }
         }
@@ -209,7 +208,7 @@ public class UserInterface {
         RoomDTO room;
         while (finish) {
             showDetailsRoom(roomNr);
-            System.out.println("Menu:\n1.Add payment\n2.Leave room\n3.Back");
+            System.out.println("Menu:\n1.Add payment\n2.Leave room\n3.Refund\n4.Back");
             String choice = scan.nextLine();
             switch (choice) {
                 case "1":
@@ -219,6 +218,9 @@ public class UserInterface {
                     finish = leaveRoom(roomNr);
                     break;
                 case "3":
+                    refund(roomNr);
+                    break;
+                case "4":
                     finish = false;
                     break;
                 default:
@@ -270,7 +272,7 @@ public class UserInterface {
         System.out.println("How much did you pay?     If he paid for you start with - sign");
         String inputMoney = scan.nextLine();
         Double money = Double.parseDouble(inputMoney);
-        Double startValue = roomResultDTOS.get(i - 1).getMoney();
+        Double startValue = roomResultDTOS.get(Integer.parseInt(receiver) - 1).getMoney();
         Double endValue = startValue - money;
         roomResultDTOS.get(Integer.parseInt(receiver) - 1).setMoney(endValue);
         for (RoomResultDTO roomResult : roomResultDTOS) {
@@ -312,7 +314,7 @@ public class UserInterface {
 
     public void showDetailsRoom(int roomNr) throws BackendException {
         System.out.println("Selecting room nr: " + (roomNr));
-        String roomUUID = user.getRooms().get(roomNr-1);
+        String roomUUID = user.getRooms().get(roomNr - 1);
         LinkedList<RoomResultDTO> roomResultDTOS = backendSession.roomResultController.getRoomResults(roomUUID);
         String roomName = backendSession.roomControler.getRoom(roomUUID).getName();
         System.out.println("Room details: " + roomName);
@@ -325,10 +327,10 @@ public class UserInterface {
         LinkedList<RoomResultDTO> roomResultDTO = backendSession.roomResultController.getRoomResults(user.getRooms().get(roomNr - 1));
         String roomName = backendSession.roomControler.getRoom(roomResultDTO.get(0).getRoomId()).getName();
         if (roomResultDTO.size() == 1) {
-            backendSession.roomControler.deleteRoom(roomName,roomResultDTO.get(0).getRoomId());
+            backendSession.roomControler.deleteRoom(roomName, roomResultDTO.get(0).getRoomId());
             backendSession.roomResultController.deleteRoomResult(roomResultDTO.get(0).getRoomId());
-            backendSession.userControler.deleteUserRoom(user.getName(),user.getPassword(),user.getUserId(),roomResultDTO.get(0).getRoomId());
-            user.getRooms().remove(roomNr-1);
+            backendSession.userControler.deleteUserRoom(user.getName(), user.getPassword(), user.getUserId(), roomResultDTO.get(0).getRoomId());
+            user.getRooms().remove(roomNr - 1);
             System.out.println("You left room");
             return false;
         }
@@ -336,9 +338,9 @@ public class UserInterface {
             for (RoomResultDTO room : roomResultDTO) {
                 if (user.getUserId().equals(room.getUserId())) {
                     if (room.getMoney() == 0.0) {
-                        backendSession.roomResultController.deleteUserRoomResult(roomResultDTO.get(0).getRoomId(),user.getUserId());
-                        backendSession.userControler.deleteUserRoom(user.getName(),user.getPassword(),user.getUserId(),roomResultDTO.get(0).getRoomId());
-                        user.getRooms().remove(roomNr-1);
+                        backendSession.roomResultController.deleteUserRoomResult(roomResultDTO.get(0).getRoomId(), user.getUserId());
+                        backendSession.userControler.deleteUserRoom(user.getName(), user.getPassword(), user.getUserId(), roomResultDTO.get(0).getRoomId());
+                        user.getRooms().remove(roomNr - 1);
                         System.out.println("You left room");
                         return false;
                     } else {
@@ -346,10 +348,54 @@ public class UserInterface {
                         return true;
                     }
                 }
-
             }
 
         }
         return true;
+    }
+
+    public void refund(int roomNr) throws BackendException {
+        LinkedList<RoomResultDTO> roomResultDTOS = backendSession.roomResultController.getRoomResults(user.getRooms().get(roomNr - 1));
+        double myMoney = 0.0;
+        double userMoney;
+        for (RoomResultDTO roomResult : roomResultDTOS) {
+            if (user.getUserId().equals(roomResult.getUserId())) {
+                myMoney = roomResult.getMoney();
+                break;
+            }
+        }
+        if (myMoney < 0) {
+            for (RoomResultDTO roomResult : roomResultDTOS) {
+                if (roomResult.getMoney() >= Math.abs(myMoney)) {
+                    System.out.println("You refund to " + roomResult.getUserName());
+                    userMoney = roomResult.getMoney() + myMoney;
+                    myMoney += Math.abs(myMoney);
+                    backendSession.roomResultController.addRoomResult(roomResult.getRoomId(), user.getUserId(), user.getName(), myMoney);
+                    backendSession.roomResultController.addRoomResult(roomResult.getRoomId(), roomResult.getUserId(), roomResult.getUserName(), userMoney);
+                    break;
+                }
+            }
+            Collections.reverse(roomResultDTOS); //<-Do poprawy comparator
+            for (RoomResultDTO roomResult : roomResultDTOS) {
+                System.out.println(roomResult.getUserName()+" "+roomResult.getMoney());
+            }
+            for (RoomResultDTO roomResult : roomResultDTOS) {
+                if(myMoney<0 && roomResult.getMoney()>0) {
+                    if (roomResult.getMoney() <= Math.abs(myMoney)) {
+                        System.out.println("You refund to " + roomResult.getUserName());
+                        myMoney += roomResult.getMoney();
+                        backendSession.roomResultController.addRoomResult(roomResult.getRoomId(), user.getUserId(), user.getName(), myMoney);
+                        backendSession.roomResultController.addRoomResult(roomResult.getRoomId(), roomResult.getUserId(), roomResult.getUserName(), 0.0);
+                    } else {
+                        System.out.println("You refund to " + roomResult.getUserName());
+                        userMoney = roomResult.getMoney() + myMoney;
+                        myMoney += Math.abs(myMoney);
+                        backendSession.roomResultController.addRoomResult(roomResult.getRoomId(), user.getUserId(), user.getName(), myMoney);
+                        backendSession.roomResultController.addRoomResult(roomResult.getRoomId(), roomResult.getUserId(), roomResult.getUserName(), userMoney);
+                        break;
+                    }
+                }
+            }
+        }
     }
 }

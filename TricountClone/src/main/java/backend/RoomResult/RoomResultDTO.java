@@ -1,6 +1,6 @@
 package backend.RoomResult;
 
-public class RoomResultDTO {
+public class RoomResultDTO implements Comparable<RoomResultDTO> {
     private String roomId;
     private String userId;
     private String userName;
@@ -35,5 +35,10 @@ public class RoomResultDTO {
 
     public String toString(){
         return "RoomId:"+ this.roomId+"\nUserId:"+this.userId+"\nUserName:"+this.userName+"\nMoney:"+this.money;
+    }
+
+    @Override
+    public int compareTo(RoomResultDTO roomResultDTO){
+        return getMoney().compareTo(roomResultDTO.getMoney());
     }
 }
