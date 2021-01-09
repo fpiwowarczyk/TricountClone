@@ -17,8 +17,13 @@ public class RoomResultController {
         return this.roomResultService.selectAllRoomResults();
     }
 
+
     public LinkedList<RoomResultDTO> getRoomResults(String room) throws BackendException {
         return this.roomResultService.selectResultForRoom(room);
+    }
+
+    public RoomResultDTO getUserRoomResults(String room,String userId) throws BackendException {
+        return this.roomResultService.selectUserResultForRoom(room,userId);
     }
 
     public void addRoomResult(String room, String user, String userName, Double money) throws BackendException {
