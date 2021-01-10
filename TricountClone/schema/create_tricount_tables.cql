@@ -31,6 +31,5 @@ CREATE TABLE Payments (
   amount double,
   payer uuid,
   receiver uuid,
-  // date ????
   PRIMARY KEY (room, payer,paymentId)
 );
