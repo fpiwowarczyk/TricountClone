@@ -34,7 +34,7 @@ public class RoomResultService {
             SELECT_ALL_RESULTS = session.prepare("SELECT * FROM roomresult");
             DELETE_RESULTS_FOR_ROOM = session.prepare("DELETE FROM roomresult WHERE room = ?");
             DELETE_USER_RESULTS_FOR_ROOM = session.prepare("DELETE FROM roomresult WHERE room = ? and user = ?");
-            INSERT_NEW_RESULT_FOR_ROOM = session.prepare("INSERT INTO roomresult (room,user,userName,money) VALUES (?,?,?,?)");
+            INSERT_NEW_RESULT_FOR_ROOM = session.prepare("INSERT INTO tricount.roomresult (room,user,userName,money) VALUES (?,?,?,?)");
 
         }catch (Exception e){
             throw new BackendException("Could not prepare statements. " + e.getMessage()+".",e);

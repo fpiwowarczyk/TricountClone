@@ -11,7 +11,7 @@ public class Main {
 
     private static final String PROPERTIES_FILENAME = "config.properties";
 
-    public static void main(String[] args) throws BackendException,InterruptedException {
+    public static void main(String[] args) throws BackendException, InterruptedException {
         String contactPoint = null;
         String keyspace = null;
         Properties properties = new Properties();
@@ -29,21 +29,11 @@ public class Main {
 
         UserInterface UI = new UserInterface(backendSession);
 
-        //UI.start();
-        StressTests tests = new StressTests(backendSession);
-        tests.startTest();
-        tests.checkSum();
+        UI.start();
+//        StressTests tests = new StressTests(backendSession);
+//        tests.cleanTransactions();
+//        tests.startTest();
+//        tests.checkSum();
         backendSession.endSession();
     }
 }
-
-// Whats Missing #TODO
-//
-//
-//
-//
-//
-
-
-// #TODO Jakie problemy sie pojawily
-// Jak dodawalem usera to nie lapalo ze go dodaje z jakiegos powodu. Rozwiazanie trzeba bylo lepiej okreslic pokoj tzn <keyspace>.table a nie tylko table przy insercie

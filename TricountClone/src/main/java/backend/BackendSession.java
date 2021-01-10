@@ -19,7 +19,7 @@ public class BackendSession {
     public UserControler userControler;
 
     public BackendSession(String contactPoint, String keyspace) throws BackendException {
-        Cluster cluster = Cluster.builder().addContactPoint(contactPoint).build();
+        Cluster cluster = Cluster.builder().addContactPoint(contactPoint).withQueryOptions(new QueryOptions().setConsistencyLevel(ConsistencyLevel.ONE)).build();
         try {
             session = cluster.connect(keyspace);
         } catch (Exception e) {

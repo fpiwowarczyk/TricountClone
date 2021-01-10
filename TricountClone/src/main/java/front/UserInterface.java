@@ -28,7 +28,7 @@ public class UserInterface {
         System.out.println("WELCOME in CassCount! \n");
         boolean finish = true;
         while (finish) {
-            System.out.println("Select option: \n1.LogIn\n2.Register\n3.Quit");
+            System.out.println("Select one of options: \n1.LogIn\n2.Register\n3.Quit");
             String choice = scan.nextLine();
             switch (choice) {
                 case "1":
@@ -52,7 +52,7 @@ public class UserInterface {
         System.out.print("Password: ");
         String password = scan.nextLine();
         if (!name.isEmpty() && !password.isEmpty()) {
-            System.out.println("You have no rooms so we will add you test room");
+            System.out.println("Test room is added for you");
             RoomDTO testRoom = new RoomDTO("TestRoom");
             backendSession.roomControler.addRoom(testRoom.getName(), testRoom.getRoomId());
             backendSession.userControler.insertUser(name, password, testRoom.getRoomId());
@@ -94,7 +94,7 @@ public class UserInterface {
 
     public void printMenu() throws BackendException {
         while (logged) {
-            System.out.println("Menu:\n1.Show your rooms\n2.Add room\n3.Logout\n4.Select room");
+            System.out.println("Menu:\n1.Show your rooms\n2.Add room\n3.Select room\n4.Logout");
             String choice = scan.nextLine();
             switch (choice) {
                 case "1":
@@ -104,10 +104,10 @@ public class UserInterface {
                     addRoom();
                     break;
                 case "3":
-                    logged = false;
+                    selectRoom();
                     break;
                 case "4":
-                    selectRoom();
+                    logged = false;
                     break;
                 default:
                     System.out.println("There is no option like that, chose again");
@@ -165,7 +165,7 @@ public class UserInterface {
             user.addRoom(roomDTO.getRoomId());
             System.out.println("A new room \"" + roomDTO.getName() + "\" has been created.");
         }
-        System.out.print("----Room added----");
+        System.out.print("----Room added----\n");
     }
 
     public void addRoomFromId() throws BackendException {
@@ -173,7 +173,7 @@ public class UserInterface {
         String roomId = scan.nextLine();
         if (!roomId.isEmpty()) {
             RoomDTO roomDTO = backendSession.roomControler.getRoom(roomId);
-            System.out.println(roomDTO.getName());
+            System.out.println("Room name:"+roomDTO.getName());
             if (roomDTO.isEmpty()) {
                 System.out.println("Couldn't find your room");
             } else {
@@ -182,13 +182,14 @@ public class UserInterface {
                 mapUser(this.user.getName(), this.user.getPassword());
             }
         }
+        System.out.print("----Room added----");
     }
 
     public void selectRoom() throws BackendException {
         boolean finish = true;
         while (finish) {
             System.out.println("Select the room number\n0.Back");
-            showRooms(); //<-nie wiem czy to potrzebne | Mysle ze potrzebne ~FP
+            showRooms();
             int roomNr = scan.nextInt();
             scan.nextLine();
             if (roomNr != 0) {
@@ -248,6 +249,7 @@ public class UserInterface {
                     System.out.println("There are no valid options like: " + choice);
             }
         }
+        System.out.println("----Payment added-----");
     }
 
     public void payForOne(int roomNr) throws BackendException {
@@ -283,6 +285,7 @@ public class UserInterface {
             }
         }
         updateRoomResults(roomResultDTOS);
+        System.out.println("----You payment has been done----");
     }
 
     public void payForEveryone(int roomNr) throws BackendException {
@@ -302,8 +305,8 @@ public class UserInterface {
                 roomResult.setMoney(endValue);
             }
         }
-
         updateRoomResults(roomResultDTOS);
+        System.out.println("----You payment has been done----");
     }
 
     public void updateRoomResults(LinkedList<RoomResultDTO> roomResultDTOS) throws BackendException {
@@ -321,6 +324,7 @@ public class UserInterface {
         for (RoomResultDTO room : roomResultDTOS) {
             System.out.println("User: " + room.getUserName() + " " + room.getMoney());
         }
+        System.out.println("----Room details for "+roomNr+"----");
     }
 
     public boolean leaveRoom(int roomNr) throws BackendException {
@@ -331,7 +335,7 @@ public class UserInterface {
             backendSession.roomResultController.deleteRoomResult(roomResultDTO.get(0).getRoomId());
             backendSession.userControler.deleteUserRoom(user.getName(), user.getPassword(), user.getUserId(), roomResultDTO.get(0).getRoomId());
             user.getRooms().remove(roomNr - 1);
-            System.out.println("You left room");
+            System.out.println("----You left room----");
             return false;
         }
         if (roomResultDTO.size() > 1) {
@@ -341,7 +345,7 @@ public class UserInterface {
                         backendSession.roomResultController.deleteUserRoomResult(roomResultDTO.get(0).getRoomId(), user.getUserId());
                         backendSession.userControler.deleteUserRoom(user.getName(), user.getPassword(), user.getUserId(), roomResultDTO.get(0).getRoomId());
                         user.getRooms().remove(roomNr - 1);
-                        System.out.println("You left room");
+                        System.out.println("----You left room----");
                         return false;
                     } else {
                         System.out.println("You can not leave the room");
