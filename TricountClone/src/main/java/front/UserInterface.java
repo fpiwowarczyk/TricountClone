@@ -20,11 +20,15 @@ public class UserInterface {
         this.backendSession = backendSession;
     }
 
-    public void start() throws BackendException {
+    public void start() throws BackendException, InterruptedException {
         choseLogOrRegister();
     }
 
-    private void choseLogOrRegister() throws BackendException {
+    private void choseLogOrRegister() throws BackendException, InterruptedException {
+        Thread.sleep(1000);
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
+
         System.out.println("WELCOME in CassCount! \n");
         boolean finish = true;
         while (finish) {
